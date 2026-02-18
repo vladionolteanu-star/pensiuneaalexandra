@@ -1,12 +1,45 @@
 {
   "name": "Camera Dublă Clasic",
   "photos": [
-    { "src": "/images/rooms/room-100.jpg", "alt": "Camera Dublă Clasic - vedere generală" },
-    { "src": "/images/rooms/room-101.jpg", "alt": "Camera Dublă Clasic - pat" },
-    { "src": "/images/rooms/room-102.jpg", "alt": "Camera Dublă Clasic - baie" },
-    { "src": "/images/rooms/room-103.jpg", "alt": "Camera Dublă Clasic - detaliu" },
-    { "src": "/images/rooms/room-104.jpg", "alt": "Camera Dublă Clasic - balcon" },
-    { "src": "/images/rooms/room-105.jpg", "alt": "Camera Dublă Clasic - facilități" },
-    { "src": "/images/rooms/room-106.jpg", "alt": "Camera Dublă Clasic - ambient" }
+    {
+      "src": "/images/rooms/room-100.jpg",
+      "alt": "Camera Dublă Clasic - vedere generală"
+    },
+    {
+      "src": "/images/rooms/room-101.jpg",
+      "alt": "Camera Dublă Clasic - pat"
+    },
+    {
+      "src": "/images/rooms/room-110.jpg",
+      "alt": "Camera Dublă Clasic - baie"
+    },
+    {
+      "src": "/images/rooms/room-103.jpg",
+      "alt": "Camera Dublă Clasic - detaliu"
+    },
+    {
+      "src": "/images/rooms/room-104.jpg",
+      "alt": "Camera Dublă Clasic - balcon"
+    },
+    {
+      "src": "/images/rooms/room-105.jpg",
+      "alt": "Camera Dublă Clasic - facilități"
+    },
+    {
+      "src": "/images/rooms/room-106.jpg",
+      "alt": "Camera Dublă Clasic - ambient"
+    },
+    {
+      "alt": "Camera Dublă Clasic",
+      "src": "/images/rooms/room-252.jpg"
+    },
+    {
+      "alt": "Camera Dublă Clasic",
+      "src": "/images/rooms/room-150.jpg"
+    },
+    {
+      "alt": "Camera Dublă Clasic",
+      "src": "/images/rooms/room-251.jpg"
+    }
   ]
 }
