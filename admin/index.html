@@ -264,20 +264,25 @@
         </div>
     </div>
 
-    <script src="../js/main.js"></script>
     <script src="../js/calendar.js"></script>
     <script>
         const ADMIN_PASS = 'alexandra2026';
         let calendar;
 
         function loginAdmin() {
-            const pass = document.getElementById('adminPass').value;
+            const passInput = document.getElementById('adminPass');
+            if (!passInput) { console.error('No password input found'); return; }
+            const pass = passInput.value;
+            console.log('Login attempt, pass length:', pass.length);
             if (pass === ADMIN_PASS) {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 sessionStorage.setItem('adminAuth', 'true');
             } else {
                 document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
             }
         }
 
@@ -307,16 +312,20 @@
         }
 
         function initAdminCalendar() {
-            calendar = new AvailabilityCalendar('adminCalendar', {
-                selectedRoom: 'dubla-clasic',
-                isAdmin: true
-            });
+            try {
+                calendar = new AvailabilityCalendar('adminCalendar', {
+                    selectedRoom: 'dubla-clasic',
+                    isAdmin: true
+                });
+            } catch (e) {
+                console.error('Calendar init error:', e);
+            }
         }
 
         function adminSelectRoom(btn) {
             document.querySelectorAll('.admin-room-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            calendar.selectRoom(btn.dataset.room);
+            if (calendar) calendar.selectRoom(btn.dataset.room);
         }
 
         function exportAvailability() {
@@ -342,8 +351,10 @@
                 try {
                     JSON.parse(e.target.result);
                     localStorage.setItem('pensiunea_availability', e.target.result);
-                    calendar.loadAvailability();
-                    calendar.render();
+                    if (calendar) {
+                        calendar.loadAvailability();
+                        calendar.render();
+                    }
                     alert('Datele au fost importate cu succes!');
                 } catch (err) {
                     alert('Eroare: fișierul nu este valid.');
