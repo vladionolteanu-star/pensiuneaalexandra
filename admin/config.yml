@@ -2,7 +2,7 @@ backend:
   name: github
   repo: vladionolteanu-star/pensiuneaalexandra
   branch: main
-  base_url: https://pensiuneaalexandra.vercel.app
+  base_url: https://www.pensiuneaalexandra.com
   auth_endpoint: api/auth
 
 media_folder: "images/rooms"
