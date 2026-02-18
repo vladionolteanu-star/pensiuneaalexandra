@@ -213,7 +213,7 @@ function sendEmail() {
     if (data.children && data.children !== '0') body += `Copii: ${data.children}\n`;
     if (data.message) body += `\nMesaj: ${data.message}\n`;
 
-    window.location.href = `mailto:contact@pensiuneaalexandra.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:vladionolteanu@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function calculateNights(checkin, checkout) {

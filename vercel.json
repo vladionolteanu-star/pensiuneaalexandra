@@ -7,6 +7,10 @@
         {
             "source": "/admin/",
             "destination": "/admin/index.html"
+        },
+        {
+            "source": "/admin/cms",
+            "destination": "/admin/cms.html"
         }
     ]
 }
