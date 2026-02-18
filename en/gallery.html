@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery — Pensiunea Alexandra, Predeal</title>
+    <meta name="description"
+        content="Photo gallery of Pensiunea Alexandra Predeal. Exterior, rooms, common areas, mountain surroundings.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🏔️</text></svg>">
+</head>
+
+<body>
+    <header class="header" id="header">
+        <div class="header__inner">
+            <a href="index.html" class="header__logo"><svg viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L3 18h6v12h14V18h6L16 2z" fill="#1a3c34" />
+                    <path d="M13 30V22h6v8" fill="#b8860b" />
+                </svg> Pensiunea Alexandra</a>
+            <nav class="header__nav"><a href="index.html" class="header__link">Home</a><a href="rooms.html"
+                    class="header__link">Rooms</a><a href="gallery.html" class="header__link active">Gallery</a><a
+                    href="booking.html" class="header__link">Booking</a><a href="contact.html"
+                    class="header__link">Contact</a></nav>
+            <div class="header__actions"><a href="../galerie.html" class="header__lang">RO</a><a href="booking.html"
+                    class="btn btn--primary btn--sm">Book now</a><button class="hamburger" id="hamburgerBtn"
+                    aria-label="Menu"><span></span><span></span><span></span></button></div>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu"><a href="index.html">Home</a><a href="rooms.html">Rooms</a><a
+            href="gallery.html">Gallery</a><a href="booking.html">Booking</a><a href="contact.html">Contact</a></div>
+
+    <div class="page-header">
+        <div class="container">
+            <p class="section-label">Gallery</p>
+            <h1>Photo Gallery</h1>
+            <p>Discover Pensiunea Alexandra through our professional photos and drone video.</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <div class="gallery-filters">
+                <button class="gallery-filter active" data-filter="all"
+                    onclick="filterGallery('all', this)">All</button>
+                <button class="gallery-filter" data-filter="exterior"
+                    onclick="filterGallery('exterior', this)">Exterior</button>
+                <button class="gallery-filter" data-filter="camere"
+                    onclick="filterGallery('camere', this)">Rooms</button>
+                <button class="gallery-filter" data-filter="comun" onclick="filterGallery('comun', this)">Common
+                    Areas</button>
+                <button class="gallery-filter" data-filter="facilitati"
+                    onclick="filterGallery('facilitati', this)">Facilities</button>
+            </div>
+            <div class="gallery-grid" id="galleryGrid" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="gallery-grid__item" data-category="exterior" style="grid-column: span 2; grid-row: span 2;">
+                    <img src="../images/hero/hero-1.jpg" alt="Aerial view" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-2.jpg"
+                        alt="Side exterior" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-3.jpg"
+                        alt="Garden" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-4.jpg"
+                        alt="Winter exterior" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-5.jpg"
+                        alt="Panoramic" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="camere" style="grid-column: span 2; grid-row: span 2;">
+                    <img src="../images/rooms/room-100.jpg" alt="Classic Double" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-110.jpg"
+                        alt="Twin Room" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-120.jpg"
+                        alt="Room detail" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-130.jpg"
+                        alt="Family Room" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-150.jpg"
+                        alt="Predeal Apartment" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-160.jpg"
+                        alt="Panoramic Apartment" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="comun" style="grid-column: span 2; grid-row: span 2;">
+                    <img src="../images/gallery/gallery-10.jpg" alt="Lobby" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="comun"><img src="../images/gallery/gallery-50.jpg"
+                        alt="Lounge" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="comun"><img src="../images/gallery/gallery-70.jpg"
+                        alt="Common area" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="comun"><img src="../images/gallery/gallery-80.jpg"
+                        alt="Dining room" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="facilitati"
+                    style="grid-column: span 2; grid-row: span 2;"><img src="../images/gallery/gallery-280.jpg"
+                        alt="BBQ terrace" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="facilitati"><img src="../images/gallery/gallery-285.jpg"
+                        alt="Outdoor area" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="facilitati"><img src="../images/gallery/gallery-290.jpg"
+                        alt="Garden" loading="lazy"></div>
+                <div class="gallery-grid__item" data-category="facilitati"><img src="../images/gallery/gallery-30.jpg"
+                        alt="Bathroom" loading="lazy"></div>
+            </div>
+            <div style="margin-top: var(--space-3xl);">
+                <h3 style="margin-bottom: var(--space-lg); text-align: center;">🎥 Drone Video</h3>
+                <div class="video-section"><video controls poster="../images/hero/hero-1.jpg">
+                        <source src="../images/hero/drone-video.mp4" type="video/mp4">
+                    </video></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: var(--forest); text-align: center;">
+        <div class="container">
+            <h2 style="color: var(--snow); margin-bottom: var(--space-md);">Like what you see?</h2>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-xl);">Book now and experience the
+                mountains!</p><a href="booking.html" class="btn btn--outline btn--lg">Book now</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <div class="footer__brand">Pensiunea Alexandra</div>
+                </div>
+                <div>
+                    <h4 class="footer__title">Navigation</h4><a href="index.html" class="footer__link">Home</a><a
+                        href="rooms.html" class="footer__link">Rooms</a><a href="booking.html"
+                        class="footer__link">Booking</a><a href="contact.html" class="footer__link">Contact</a>
+                </div>
+                <div>
+                    <h4 class="footer__title">Contact</h4><a href="tel:+40727333869" class="footer__link">📞 0727 333
+                        869</a><a href="https://wa.me/40727333869" class="footer__link" target="_blank">💬 WhatsApp</a>
+                </div>
+                <div>
+                    <h4 class="footer__title">Address</h4>
+                    <p class="footer__link" style="cursor: default;">📍 Str. Clujului nr. 8, Predeal</p>
+                </div>
+            </div>
+            <div class="footer__bottom"><span>© 2026 Pensiunea Alexandra.</span><a href="../galerie.html"
+                    style="color: rgba(255,255,255,0.6);">🇷🇴 Română</a></div>
+        </div>
+    </footer>
+
+    <div class="whatsapp-float"><a href="https://wa.me/40727333869" class="whatsapp-float__btn" target="_blank"
+            rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg></a></div>
+
+    <div class="lightbox" id="lightbox"><button class="lightbox__close" onclick="closeLightbox()">✕</button><button
+            class="lightbox__nav lightbox__nav--prev" onclick="lightboxPrev()">‹</button><img class="lightbox__img"
+            id="lightboxImg" src="" alt=""><button class="lightbox__nav lightbox__nav--next"
+            onclick="lightboxNext()">›</button>
+        <div class="lightbox__counter" id="lightboxCounter"></div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>function filterGallery(c, b) { document.querySelectorAll('.gallery-filter').forEach(x => x.classList.remove('active')); b.classList.add('active'); document.querySelectorAll('.gallery-grid__item').forEach(i => { i.style.display = (c === 'all' || i.dataset.category === c) ? '' : 'none'; }); lightboxImages = []; document.querySelectorAll('.gallery-grid__item').forEach(i => { if (i.style.display !== 'none') { const img = i.querySelector('img'); if (img) lightboxImages.push(img.src); } }); }</script>
+</body>
+
+</html>

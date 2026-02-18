@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Source files (not needed on deployed site)
+Surse/
+
+# Agent config
+.agent/
+.gemini/

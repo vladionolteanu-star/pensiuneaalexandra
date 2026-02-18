@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezervare — Pensiunea Alexandra, Predeal</title>
+    <meta name="description"
+        content="Verifică disponibilitatea și rezervă o cameră la Pensiunea Alexandra din Predeal. Confirmarea rapidă pe WhatsApp.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🏔️</text></svg>">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header__inner">
+            <a href="index.html" class="header__logo">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 2L3 18h6v12h14V18h6L16 2z" fill="#1a3c34" />
+                    <path d="M13 30V22h6v8" fill="#b8860b" />
+                </svg>
+                Pensiunea Alexandra
+            </a>
+            <nav class="header__nav" id="mainNav">
+                <a href="index.html" class="header__link">Acasă</a>
+                <a href="camere.html" class="header__link">Camere</a>
+                <a href="galerie.html" class="header__link">Galerie</a>
+                <a href="rezervare.html" class="header__link active">Rezervare</a>
+                <a href="contact.html" class="header__link">Contact</a>
+            </nav>
+            <div class="header__actions">
+                <a href="en/booking.html" class="header__lang">EN</a>
+                <a href="rezervare.html" class="btn btn--primary btn--sm">Rezervă</a>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Acasă</a>
+        <a href="camere.html">Camere</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="rezervare.html">Rezervare</a>
+        <a href="contact.html">Contact</a>
+        <a href="en/booking.html">🇬🇧 English</a>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <p class="section-label">Rezervare</p>
+            <h1>Verifică disponibilitatea</h1>
+            <p>Selectează camera dorită, verifică disponibilitatea pe calendar și trimite cererea de rezervare.</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+
+            <!-- Room Type Selector -->
+            <div style="margin-bottom: var(--space-xl);">
+                <h3 style="margin-bottom: var(--space-md);">Selectează tipul camerei</h3>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="room-selector__btn gallery-filter active" data-room="dubla-clasic"
+                        onclick="selectRoomType(this)">Camera Dublă Clasic — 250 RON</button>
+                    <button class="room-selector__btn gallery-filter" data-room="twin"
+                        onclick="selectRoomType(this)">Camera Twin — 230 RON</button>
+                    <button class="room-selector__btn gallery-filter" data-room="familie"
+                        onclick="selectRoomType(this)">Camera Familie — 350 RON</button>
+                    <button class="room-selector__btn gallery-filter" data-room="apt-predeal"
+                        onclick="selectRoomType(this)">Apt. Predeal — 480 RON</button>
+                    <button class="room-selector__btn gallery-filter" data-room="apt-panoramic"
+                        onclick="selectRoomType(this)">Apt. Panoramic — 600 RON</button>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xl); align-items: start;">
+
+                <!-- Calendar -->
+                <div>
+                    <h3 style="margin-bottom: var(--space-md);">Calendar disponibilitate</h3>
+                    <div id="calendarContainer"></div>
+                    <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: var(--space-md);">
+                        Click pe o zi pentru a selecta check-in. Click pe a doua zi pentru check-out. Zilele marcate cu
+                        roșu sunt ocupate.
+                    </p>
+                </div>
+
+                <!-- Booking Form -->
+                <div>
+                    <form class="booking-form" id="bookingForm">
+                        <h3 class="booking-form__title">Cerere de rezervare</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Nume complet *</label>
+                                <input type="text" id="name" placeholder="Ion Popescu" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Telefon *</label>
+                                <input type="tel" id="phone" placeholder="07XX XXX XXX" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="ion@email.com">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="checkin">Check-in *</label>
+                                <input type="date" id="checkin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout">Check-out *</label>
+                                <input type="date" id="checkout" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="roomType">Tip cameră *</label>
+                            <select id="roomType" required>
+                                <option value="dubla-clasic">Camera Dublă Clasic — 250 RON/noapte</option>
+                                <option value="twin">Camera Twin — 230 RON/noapte</option>
+                                <option value="familie">Camera Familie — 350 RON/noapte</option>
+                                <option value="apt-predeal">Apartament Predeal — 480 RON/noapte</option>
+                                <option value="apt-panoramic">Apartament Panoramic — 600 RON/noapte</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guests">Adulți</label>
+                                <input type="number" id="guests" min="1" max="10" value="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="children">Copii (1-17 ani)</label>
+                                <input type="number" id="children" min="0" max="10" value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Mesaj (opțional)</label>
+                            <textarea id="message" placeholder="Cerințe speciale, întrebări..."></textarea>
+                        </div>
+
+                        <!-- Price Estimate -->
+                        <div id="priceEstimate"></div>
+
+                        <div class="form-actions">
+                            <button type="button" id="submitWhatsApp" class="btn btn--whatsapp btn--lg"
+                                style="flex: 1;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg>
+                                Trimite pe WhatsApp
+                            </button>
+                            <button type="button" id="submitEmail" class="btn btn--secondary btn--lg">
+                                ✉️ Email alternativ
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Policies -->
+                    <div
+                        style="margin-top: var(--space-xl); padding: var(--space-lg); background: var(--cream); border-radius: var(--radius-md);">
+                        <h4 style="margin-bottom: var(--space-sm);">ℹ️ Informații utile</h4>
+                        <ul style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.8;">
+                            <li>✅ Check-in: 14:00 - 23:59</li>
+                            <li>✅ Check-out: 11:00 - 12:00</li>
+                            <li>✅ Copii sub 1 an: gratuit (în patul părinților)</li>
+                            <li>✅ Copii 1-17 ani: 100 RON / noapte</li>
+                            <li>✅ Plată: Cash, card, transfer bancar</li>
+                            <li>✅ Doar cazare (fără mese incluse)</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <div class="footer__brand">Pensiunea Alexandra</div>
+                    <p class="footer__desc">Cazare premium în Predeal, la poalele munților Bucegi.</p>
+                </div>
+                <div>
+                    <h4 class="footer__title">Navigare</h4>
+                    <a href="camere.html" class="footer__link">Camere</a>
+                    <a href="galerie.html" class="footer__link">Galerie</a>
+                    <a href="contact.html" class="footer__link">Contact</a>
+                </div>
+                <div>
+                    <h4 class="footer__title">Contact</h4>
+                    <a href="tel:+40727333869" class="footer__link">📞 0727 333 869</a>
+                    <a href="https://wa.me/40727333869" class="footer__link" target="_blank">💬 WhatsApp</a>
+                </div>
+                <div>
+                    <h4 class="footer__title">Adresă</h4>
+                    <p class="footer__link" style="cursor: default;">📍 Str. Clujului nr. 8, Predeal, Brașov</p>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <span>© 2026 Pensiunea Alexandra.</span>
+                <a href="en/booking.html" style="color: rgba(255,255,255,0.6);">🇬🇧 English</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <div class="whatsapp-float">
+        <span class="whatsapp-float__tooltip">Scrie-ne pe WhatsApp</span>
+        <a href="https://wa.me/40727333869" class="whatsapp-float__btn" target="_blank" rel="noopener"
+            aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+        </a>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/booking.js"></script>
+    <script>
+        // Initialize calendar
+        calendar = new AvailabilityCalendar('calendarContainer', {
+            selectedRoom: 'dubla-clasic',
+            onDateSelect: (checkin, checkout) => {
+                if (checkin) document.getElementById('checkin').value = checkin;
+                if (checkout) document.getElementById('checkout').value = checkout;
+                updatePriceEstimate();
+            }
+        });
+
+        function selectRoomType(btn) {
+            document.querySelectorAll('.room-selector__btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            calendar.selectRoom(btn.dataset.room);
+            document.getElementById('roomType').value = btn.dataset.room;
+            updatePriceEstimate();
+        }
+    </script>
+</body>
+
+</html>
