@@ -1,17 +1,21 @@
 {
-    "name": "Apartament Predeal",
-    "photos": [
-        {
-            "src": "/images/rooms/room-150.jpg",
-            "alt": "Apartament Predeal - living"
-        },
-        {
-            "src": "/images/rooms/room-155.jpg",
-            "alt": "Apartament Predeal - dormitor"
-        },
-        {
-            "src": "/images/rooms/room-125.jpg",
-            "alt": "Apartament Predeal - bucătărie"
-        }
-    ]
+  "name": "Apartament Predeal",
+  "photos": [
+    {
+      "src": "/images/rooms/room-150.jpg",
+      "alt": "Apartament Predeal - living"
+    },
+    {
+      "src": "/images/rooms/room-155.jpg",
+      "alt": "Apartament Predeal - dormitor"
+    },
+    {
+      "src": "/images/rooms/room-125.jpg",
+      "alt": "Apartament Predeal - bucătărie"
+    },
+    {
+      "alt": "Apartament Predeal",
+      "src": "/images/rooms/test-vlad-olteanu.jpg"
+    }
+  ]
 }
