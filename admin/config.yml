@@ -10,15 +10,16 @@ public_folder: "/images/rooms"
 
 collections:
   - name: "rooms"
-    label: "🛏️ Camere — Poze"
+    label: "🛏️ Camere — Poze & Prețuri"
     label_singular: "Cameră"
-    description: "Gestionează pozele pentru fiecare cameră (max 20 poze/cameră)"
+    description: "Gestionează pozele și prețurile pentru fiecare cameră"
     files:
       - name: "dubla-clasic"
-        label: "Camera Dublă Clasic (250 RON)"
+        label: "Camera Dublă Clasic"
         file: "content/rooms/dubla-clasic.json"
         fields:
           - { name: "name", label: "Nume cameră", widget: "string", default: "Camera Dublă Clasic" }
+          - { name: "price", label: "Preț per noapte (RON)", widget: "number", value_type: "int", min: 50, max: 5000, default: 250 }
           - name: "photos"
             label: "Poze (max 20)"
             widget: "list"
@@ -29,10 +30,11 @@ collections:
               - { name: "alt", label: "Descriere", widget: "string", default: "Camera Dublă Clasic" }
 
       - name: "twin"
-        label: "Camera Twin (230 RON)"
+        label: "Camera Twin"
         file: "content/rooms/twin.json"
         fields:
           - { name: "name", label: "Nume cameră", widget: "string", default: "Camera Twin" }
+          - { name: "price", label: "Preț per noapte (RON)", widget: "number", value_type: "int", min: 50, max: 5000, default: 230 }
           - name: "photos"
             label: "Poze (max 20)"
             widget: "list"
@@ -43,10 +45,11 @@ collections:
               - { name: "alt", label: "Descriere", widget: "string", default: "Camera Twin" }
 
       - name: "familie"
-        label: "Camera Familie (350 RON)"
+        label: "Camera Familie"
         file: "content/rooms/familie.json"
         fields:
           - { name: "name", label: "Nume cameră", widget: "string", default: "Camera Familie" }
+          - { name: "price", label: "Preț per noapte (RON)", widget: "number", value_type: "int", min: 50, max: 5000, default: 350 }
           - name: "photos"
             label: "Poze (max 20)"
             widget: "list"
@@ -57,10 +60,11 @@ collections:
               - { name: "alt", label: "Descriere", widget: "string", default: "Camera Familie" }
 
       - name: "apt-predeal"
-        label: "Apartament Predeal (480 RON)"
+        label: "Apartament Predeal"
         file: "content/rooms/apt-predeal.json"
         fields:
           - { name: "name", label: "Nume cameră", widget: "string", default: "Apartament Predeal" }
+          - { name: "price", label: "Preț per noapte (RON)", widget: "number", value_type: "int", min: 50, max: 5000, default: 480 }
           - name: "photos"
             label: "Poze (max 20)"
             widget: "list"
@@ -71,10 +75,11 @@ collections:
               - { name: "alt", label: "Descriere", widget: "string", default: "Apartament Predeal" }
 
       - name: "apt-panoramic"
-        label: "Apartament Panoramic (600 RON)"
+        label: "Apartament Panoramic"
         file: "content/rooms/apt-panoramic.json"
         fields:
           - { name: "name", label: "Nume cameră", widget: "string", default: "Apartament Panoramic" }
+          - { name: "price", label: "Preț per noapte (RON)", widget: "number", value_type: "int", min: 50, max: 5000, default: 600 }
           - name: "photos"
             label: "Poze (max 20)"
             widget: "list"

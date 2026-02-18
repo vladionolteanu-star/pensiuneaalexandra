@@ -40,9 +40,18 @@ async function initRoomSlideshows() {
 
             // Build slideshow
             buildSlideshow(gallery, data.photos, elementId);
+
+            // Update price if available
+            if (data.price) {
+                const priceEl = container.querySelector('.room-detail__price');
+                if (priceEl) {
+                    const isEN = window.location.pathname.includes('/en/');
+                    priceEl.innerHTML = `${data.price} RON <span>/ ${isEN ? 'night' : 'noapte'}</span>`;
+                }
+            }
         } catch (e) {
-            // Fallback: keep static image
-            console.log(`Using static image for ${elementId}`);
+            // Fallback: keep static image and price
+            console.log(`Using static data for ${elementId}`);
         }
     }
 }

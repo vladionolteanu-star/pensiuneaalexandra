@@ -1,5 +1,6 @@
 {
     "name": "Apartament Panoramic",
+    "price": 600,
     "photos": [
         {
             "src": "/images/rooms/room-160.jpg",
