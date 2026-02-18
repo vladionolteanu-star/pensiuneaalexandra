@@ -1,0 +1,17 @@
+{
+    "name": "Camera Twin",
+    "photos": [
+        {
+            "src": "/images/rooms/room-110.jpg",
+            "alt": "Camera Twin - vedere generală"
+        },
+        {
+            "src": "/images/rooms/room-115.jpg",
+            "alt": "Camera Twin - detaliu"
+        },
+        {
+            "src": "/images/rooms/room-120.jpg",
+            "alt": "Camera Twin - facilități"
+        }
+    ]
+}

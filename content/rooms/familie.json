@@ -1,0 +1,21 @@
+{
+    "name": "Camera Familie",
+    "photos": [
+        {
+            "src": "/images/rooms/room-130.jpg",
+            "alt": "Camera Familie - vedere generală"
+        },
+        {
+            "src": "/images/rooms/room-135.jpg",
+            "alt": "Camera Familie - detaliu"
+        },
+        {
+            "src": "/images/rooms/room-140.jpg",
+            "alt": "Camera Familie - facilități"
+        },
+        {
+            "src": "/images/rooms/room-145.jpg",
+            "alt": "Camera Familie - ambient"
+        }
+    ]
+}

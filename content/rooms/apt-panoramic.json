@@ -1,0 +1,21 @@
+{
+    "name": "Apartament Panoramic",
+    "photos": [
+        {
+            "src": "/images/rooms/room-160.jpg",
+            "alt": "Apartament Panoramic - terasă"
+        },
+        {
+            "src": "/images/rooms/room-250.jpg",
+            "alt": "Apartament Panoramic - vedere panoramică"
+        },
+        {
+            "src": "/images/rooms/room-251.jpg",
+            "alt": "Apartament Panoramic - jacuzzi"
+        },
+        {
+            "src": "/images/rooms/room-252.jpg",
+            "alt": "Apartament Panoramic - interior"
+        }
+    ]
+}

@@ -1,0 +1,101 @@
+backend:
+  name: github
+  repo: vladionolteanu-star/pensiuneaalexandra
+  branch: main
+  base_url: https://pensiuneaalexandra.vercel.app
+  auth_endpoint: api/auth
+
+media_folder: "images/rooms"
+public_folder: "/images/rooms"
+
+collections:
+  - name: "rooms"
+    label: "🛏️ Camere — Poze"
+    label_singular: "Cameră"
+    description: "Gestionează pozele pentru fiecare cameră (max 20 poze/cameră)"
+    files:
+      - name: "dubla-clasic"
+        label: "Camera Dublă Clasic (250 RON)"
+        file: "content/rooms/dubla-clasic.json"
+        fields:
+          - { name: "name", label: "Nume cameră", widget: "string", default: "Camera Dublă Clasic" }
+          - name: "photos"
+            label: "Poze (max 20)"
+            widget: "list"
+            max: 20
+            summary: "{{fields.alt}}"
+            fields:
+              - { name: "src", label: "Imagine", widget: "image" }
+              - { name: "alt", label: "Descriere", widget: "string", default: "Camera Dublă Clasic" }
+
+      - name: "twin"
+        label: "Camera Twin (230 RON)"
+        file: "content/rooms/twin.json"
+        fields:
+          - { name: "name", label: "Nume cameră", widget: "string", default: "Camera Twin" }
+          - name: "photos"
+            label: "Poze (max 20)"
+            widget: "list"
+            max: 20
+            summary: "{{fields.alt}}"
+            fields:
+              - { name: "src", label: "Imagine", widget: "image" }
+              - { name: "alt", label: "Descriere", widget: "string", default: "Camera Twin" }
+
+      - name: "familie"
+        label: "Camera Familie (350 RON)"
+        file: "content/rooms/familie.json"
+        fields:
+          - { name: "name", label: "Nume cameră", widget: "string", default: "Camera Familie" }
+          - name: "photos"
+            label: "Poze (max 20)"
+            widget: "list"
+            max: 20
+            summary: "{{fields.alt}}"
+            fields:
+              - { name: "src", label: "Imagine", widget: "image" }
+              - { name: "alt", label: "Descriere", widget: "string", default: "Camera Familie" }
+
+      - name: "apt-predeal"
+        label: "Apartament Predeal (480 RON)"
+        file: "content/rooms/apt-predeal.json"
+        fields:
+          - { name: "name", label: "Nume cameră", widget: "string", default: "Apartament Predeal" }
+          - name: "photos"
+            label: "Poze (max 20)"
+            widget: "list"
+            max: 20
+            summary: "{{fields.alt}}"
+            fields:
+              - { name: "src", label: "Imagine", widget: "image" }
+              - { name: "alt", label: "Descriere", widget: "string", default: "Apartament Predeal" }
+
+      - name: "apt-panoramic"
+        label: "Apartament Panoramic (600 RON)"
+        file: "content/rooms/apt-panoramic.json"
+        fields:
+          - { name: "name", label: "Nume cameră", widget: "string", default: "Apartament Panoramic" }
+          - name: "photos"
+            label: "Poze (max 20)"
+            widget: "list"
+            max: 20
+            summary: "{{fields.alt}}"
+            fields:
+              - { name: "src", label: "Imagine", widget: "image" }
+              - { name: "alt", label: "Descriere", widget: "string", default: "Apartament Panoramic" }
+
+  - name: "gallery"
+    label: "📸 Galerie Generală"
+    files:
+      - name: "gallery"
+        label: "Poze galerie"
+        file: "content/gallery.json"
+        fields:
+          - name: "photos"
+            label: "Poze galerie (drag & drop pentru reordonare)"
+            widget: "list"
+            summary: "{{fields.alt}}"
+            fields:
+              - { name: "src", label: "Imagine", widget: "image" }
+              - { name: "alt", label: "Descriere", widget: "string" }
+              - { name: "category", label: "Categorie", widget: "select", options: ["exterior", "camere", "facilitati", "imprejurimi"], default: "exterior" }
