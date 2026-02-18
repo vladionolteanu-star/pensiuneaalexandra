@@ -264,25 +264,20 @@
         </div>
     </div>
 
-    <script src="../js/calendar.js"></script>
+    <!-- LOGIN SCRIPT — loads first, no dependencies -->
     <script>
         const ADMIN_PASS = 'alexandra2026';
-        let calendar;
 
         function loginAdmin() {
-            const passInput = document.getElementById('adminPass');
-            if (!passInput) { console.error('No password input found'); return; }
-            const pass = passInput.value;
-            console.log('Login attempt, pass length:', pass.length);
+            var pass = document.getElementById('adminPass').value;
             if (pass === ADMIN_PASS) {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 sessionStorage.setItem('adminAuth', 'true');
             } else {
-                document.getElementById('loginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('loginError').style.display = 'none';
-                }, 3000);
+                var err = document.getElementById('loginError');
+                err.style.display = 'block';
+                setTimeout(function () { err.style.display = 'none'; }, 3000);
             }
         }
 
@@ -297,11 +292,17 @@
             document.getElementById('adminLogin').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
         }
+    </script>
+
+    <!-- CALENDAR + ADMIN SCRIPTS — loads after login is ready -->
+    <script src="../js/calendar.js"></script>
+    <script>
+        var calendar = null;
 
         // Tab switching
         function switchTab(btn) {
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-tab').forEach(function (t) { t.classList.remove('active'); });
+            document.querySelectorAll('.admin-section').forEach(function (s) { s.classList.remove('active'); });
             btn.classList.add('active');
             document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
 
@@ -318,23 +319,23 @@
                     isAdmin: true
                 });
             } catch (e) {
-                console.error('Calendar init error:', e);
+                document.getElementById('adminCalendar').innerHTML = '<p style="color:red;">Eroare la încărcarea calendarului.</p>';
             }
         }
 
         function adminSelectRoom(btn) {
-            document.querySelectorAll('.admin-room-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.admin-room-btn').forEach(function (b) { b.classList.remove('active'); });
             btn.classList.add('active');
             if (calendar) calendar.selectRoom(btn.dataset.room);
         }
 
         function exportAvailability() {
-            const data = localStorage.getItem('pensiunea_availability') || '{}';
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            var data = localStorage.getItem('pensiunea_availability') || '{}';
+            var blob = new Blob([data], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
             a.href = url;
-            a.download = `disponibilitate-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = 'disponibilitate-' + new Date().toISOString().split('T')[0] + '.json';
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -344,17 +345,14 @@
         }
 
         function handleImport(event) {
-            const file = event.target.files[0];
+            var file = event.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
+            var reader = new FileReader();
+            reader.onload = function (e) {
                 try {
                     JSON.parse(e.target.result);
                     localStorage.setItem('pensiunea_availability', e.target.result);
-                    if (calendar) {
-                        calendar.loadAvailability();
-                        calendar.render();
-                    }
+                    if (calendar) { calendar.loadAvailability(); calendar.render(); }
                     alert('Datele au fost importate cu succes!');
                 } catch (err) {
                     alert('Eroare: fișierul nu este valid.');
@@ -364,26 +362,24 @@
         }
 
         // Quick message toggle
-        document.getElementById('quickMessage')?.addEventListener('change', function () {
+        var qm = document.getElementById('quickMessage');
+        if (qm) qm.addEventListener('change', function () {
             document.getElementById('customMessage').style.display = this.value === 'custom' ? 'block' : 'none';
         });
 
         function sendQuickMessage() {
-            let phone = document.getElementById('clientPhone').value.trim();
+            var phone = document.getElementById('clientPhone').value.trim();
             if (!phone) { alert('Introdu numărul clientului.'); return; }
-
             phone = phone.replace(/\s/g, '').replace(/^0/, '40');
-
-            const type = document.getElementById('quickMessage').value;
-            const messages = {
-                confirm: 'Bună ziua! ✅ Vă confirmăm rezervarea la Pensiunea Alexandra. Vă așteptăm cu drag! Detaliile rămân cele din cererea dumneavoastră.',
+            var type = document.getElementById('quickMessage').value;
+            var messages = {
+                confirm: 'Bună ziua! ✅ Vă confirmăm rezervarea la Pensiunea Alexandra. Vă așteptăm cu drag!',
                 deny: 'Bună ziua! Din păcate, camera solicitată nu mai este disponibilă în perioada solicitată. Vă putem oferi o altă cameră sau o altă perioadă?',
                 info: 'Bună ziua! Revin cu informații suplimentare despre Pensiunea Alexandra.',
                 custom: document.getElementById('customMessage').value
             };
-
-            const text = encodeURIComponent(messages[type] || '');
-            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+            var text = encodeURIComponent(messages[type] || '');
+            window.open('https://wa.me/' + phone + '?text=' + text, '_blank');
         }
     </script>
 </body>
