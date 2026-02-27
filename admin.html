@@ -170,7 +170,7 @@
         }
 
         function initAdminCalendar() {
-            calendar = new AvailabilityCalendar('adminCalendar', {
+            calendar = window.calendar = new AvailabilityCalendar('adminCalendar', {
                 selectedRoom: 'dubla-clasic',
                 isAdmin: true
             });

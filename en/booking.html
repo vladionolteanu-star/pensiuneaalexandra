@@ -160,7 +160,7 @@
     <script src="../js/calendar.js"></script>
     <script src="../js/booking.js"></script>
     <script>
-        calendar = new AvailabilityCalendar('calendarContainer', {
+        calendar = window.calendar = new AvailabilityCalendar('calendarContainer', {
             selectedRoom: 'dubla-clasic',
             onDateSelect: (checkin, checkout) => {
                 if (checkin) document.getElementById('checkin').value = checkin;

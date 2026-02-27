@@ -175,9 +175,9 @@ class AvailabilityCalendar {
         let html = `
       <div class="calendar">
         <div class="calendar__header">
-          <button class="calendar__nav-btn" onclick="calendar.prevMonth()" aria-label="Luna anterioară">‹</button>
+          <button class="calendar__nav-btn" onclick="window.calendar.prevMonth()" aria-label="Luna anterioară">‹</button>
           <span class="calendar__month">${MONTHS_RO[this.currentMonth]} ${this.currentYear}</span>
-          <button class="calendar__nav-btn" onclick="calendar.nextMonth()" aria-label="Luna următoare">›</button>
+          <button class="calendar__nav-btn" onclick="window.calendar.nextMonth()" aria-label="Luna următoare">›</button>
         </div>
         <div class="calendar__weekdays">
           ${DAYS_RO.map(d => `<span class="calendar__weekday">${d}</span>`).join('')}
@@ -211,7 +211,7 @@ class AvailabilityCalendar {
             if (this.isAdmin && isOccupied) classes += ' admin-calendar__day--toggle-occupied';
 
             const clickable = this.isAdmin || (!isPast);
-            html += `<span class="${classes}" ${clickable ? `onclick="calendar.handleDayClick('${dateStr}')"` : ''}>${day}</span>`;
+            html += `<span class="${classes}" ${clickable ? `onclick="window.calendar.handleDayClick('${dateStr}')"` : ''}>${day}</span>`;
         }
 
         html += `
@@ -233,5 +233,4 @@ class AvailabilityCalendar {
     }
 }
 
-// Global calendar instance
-let calendar;
+// Calendar instance managed by each page

@@ -271,7 +271,7 @@
            ============================== */
 
         var ADMIN_PASS = 'alexandra2026';
-        var calendar = null;
+        window.calendar = null;
         var calendarScriptLoaded = false;
 
         // ====== LOGIN ======
@@ -311,7 +311,7 @@
             if (target) target.classList.add('active');
 
             // Load calendar on first view
-            if (btn.getAttribute('data-tab') === 'calendar' && !calendar) {
+            if (btn.getAttribute('data-tab') === 'calendar' && !window.calendar) {
                 loadCalendarScript();
             }
         }
@@ -338,7 +338,7 @@
         function initAdminCalendar() {
             try {
                 if (typeof AvailabilityCalendar !== 'undefined') {
-                    calendar = new AvailabilityCalendar('adminCalendar', {
+                    window.calendar = new AvailabilityCalendar('adminCalendar', {
                         selectedRoom: 'dubla-clasic',
                         isAdmin: true
                     });
@@ -353,7 +353,7 @@
             var btns = document.querySelectorAll('.admin-room-btn');
             for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
             btn.classList.add('active');
-            if (calendar) calendar.selectRoom(btn.getAttribute('data-room'));
+            if (window.calendar) window.calendar.selectRoom(btn.getAttribute('data-room'));
         }
 
         // ====== EXPORT / IMPORT ======
@@ -380,7 +380,7 @@
                 try {
                     JSON.parse(e.target.result);
                     localStorage.setItem('pensiunea_availability', e.target.result);
-                    if (calendar) { calendar.loadAvailability(); calendar.render(); }
+                    if (window.calendar) { window.calendar.loadAvailability(); window.calendar.render(); }
                     alert('Datele au fost importate cu succes!');
                 } catch (err) {
                     alert('Eroare: fișierul nu este valid.');

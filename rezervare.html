@@ -235,7 +235,7 @@
     <script src="js/booking.js"></script>
     <script>
         // Initialize calendar
-        calendar = new AvailabilityCalendar('calendarContainer', {
+        window.calendar = new AvailabilityCalendar('calendarContainer', {
             selectedRoom: 'dubla-clasic',
             onDateSelect: (checkin, checkout) => {
                 if (checkin) document.getElementById('checkin').value = checkin;
