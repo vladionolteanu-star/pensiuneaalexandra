@@ -264,10 +264,17 @@
         </div>
     </div>
 
-    <!-- LOGIN SCRIPT — loads first, no dependencies -->
     <script>
-        const ADMIN_PASS = 'alexandra2026';
+        /* ==============================
+           ADMIN PANEL — All-in-one script
+           No external dependencies needed for UI
+           ============================== */
 
+        var ADMIN_PASS = 'alexandra2026';
+        var calendar = null;
+        var calendarScriptLoaded = false;
+
+        // ====== LOGIN ======
         function loginAdmin() {
             var pass = document.getElementById('adminPass').value;
             if (pass === ADMIN_PASS) {
@@ -292,43 +299,64 @@
             document.getElementById('adminLogin').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
         }
-    </script>
 
-    <!-- CALENDAR + ADMIN SCRIPTS — loads after login is ready -->
-    <script src="../js/calendar.js"></script>
-    <script>
-        var calendar = null;
-
-        // Tab switching
+        // ====== TAB SWITCHING ======
         function switchTab(btn) {
-            document.querySelectorAll('.admin-tab').forEach(function (t) { t.classList.remove('active'); });
-            document.querySelectorAll('.admin-section').forEach(function (s) { s.classList.remove('active'); });
+            var tabs = document.querySelectorAll('.admin-tab');
+            var sections = document.querySelectorAll('.admin-section');
+            for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+            for (var i = 0; i < sections.length; i++) sections[i].classList.remove('active');
             btn.classList.add('active');
-            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            var target = document.getElementById('tab-' + btn.getAttribute('data-tab'));
+            if (target) target.classList.add('active');
 
-            // Init calendar on first view
-            if (btn.dataset.tab === 'calendar' && !calendar) {
-                initAdminCalendar();
+            // Load calendar on first view
+            if (btn.getAttribute('data-tab') === 'calendar' && !calendar) {
+                loadCalendarScript();
             }
+        }
+
+        // ====== CALENDAR (loaded dynamically) ======
+        function loadCalendarScript() {
+            if (calendarScriptLoaded) {
+                initAdminCalendar();
+                return;
+            }
+            var script = document.createElement('script');
+            script.src = '/js/calendar.js';
+            script.onload = function () {
+                calendarScriptLoaded = true;
+                initAdminCalendar();
+            };
+            script.onerror = function () {
+                document.getElementById('adminCalendar').innerHTML =
+                    '<p style="color:#c33; padding:20px;">⚠️ Nu s-a putut încărca calendarul. Reîncarcă pagina.</p>';
+            };
+            document.head.appendChild(script);
         }
 
         function initAdminCalendar() {
             try {
-                calendar = new AvailabilityCalendar('adminCalendar', {
-                    selectedRoom: 'dubla-clasic',
-                    isAdmin: true
-                });
+                if (typeof AvailabilityCalendar !== 'undefined') {
+                    calendar = new AvailabilityCalendar('adminCalendar', {
+                        selectedRoom: 'dubla-clasic',
+                        isAdmin: true
+                    });
+                }
             } catch (e) {
-                document.getElementById('adminCalendar').innerHTML = '<p style="color:red;">Eroare la încărcarea calendarului.</p>';
+                document.getElementById('adminCalendar').innerHTML =
+                    '<p style="color:#c33; padding:20px;">⚠️ Eroare calendar: ' + e.message + '</p>';
             }
         }
 
         function adminSelectRoom(btn) {
-            document.querySelectorAll('.admin-room-btn').forEach(function (b) { b.classList.remove('active'); });
+            var btns = document.querySelectorAll('.admin-room-btn');
+            for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
             btn.classList.add('active');
-            if (calendar) calendar.selectRoom(btn.dataset.room);
+            if (calendar) calendar.selectRoom(btn.getAttribute('data-room'));
         }
 
+        // ====== EXPORT / IMPORT ======
         function exportAvailability() {
             var data = localStorage.getItem('pensiunea_availability') || '{}';
             var blob = new Blob([data], { type: 'application/json' });
@@ -361,11 +389,14 @@
             reader.readAsText(file);
         }
 
-        // Quick message toggle
+        // ====== WHATSAPP ======
         var qm = document.getElementById('quickMessage');
-        if (qm) qm.addEventListener('change', function () {
-            document.getElementById('customMessage').style.display = this.value === 'custom' ? 'block' : 'none';
-        });
+        if (qm) {
+            qm.addEventListener('change', function () {
+                var cm = document.getElementById('customMessage');
+                if (cm) cm.style.display = this.value === 'custom' ? 'block' : 'none';
+            });
+        }
 
         function sendQuickMessage() {
             var phone = document.getElementById('clientPhone').value.trim();
@@ -374,7 +405,7 @@
             var type = document.getElementById('quickMessage').value;
             var messages = {
                 confirm: 'Bună ziua! ✅ Vă confirmăm rezervarea la Pensiunea Alexandra. Vă așteptăm cu drag!',
-                deny: 'Bună ziua! Din păcate, camera solicitată nu mai este disponibilă în perioada solicitată. Vă putem oferi o altă cameră sau o altă perioadă?',
+                deny: 'Bună ziua! Din păcate, camera solicitată nu mai este disponibilă. Vă putem oferi altă cameră?',
                 info: 'Bună ziua! Revin cu informații suplimentare despre Pensiunea Alexandra.',
                 custom: document.getElementById('customMessage').value
             };
