@@ -5,13 +5,15 @@ backend:
   base_url: https://www.pensiuneaalexandra.com
   auth_endpoint: api/auth
 
-media_folder: "images/rooms"
-public_folder: "/images/rooms"
+media_folder: "images"
+public_folder: "/images"
 
 collections:
   - name: "rooms"
     label: "🛏️ Camere — Poze & Prețuri"
     label_singular: "Cameră"
+    media_folder: "images/rooms"
+    public_folder: "/images/rooms"
     description: "Gestionează pozele și prețurile pentru fiecare cameră"
     files:
       - name: "dubla-clasic"
@@ -91,6 +93,8 @@ collections:
 
   - name: "gallery"
     label: "📸 Galerie Generală"
+    media_folder: "images/gallery"
+    public_folder: "/images/gallery"
     files:
       - name: "gallery"
         label: "Poze galerie"

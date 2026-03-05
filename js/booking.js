@@ -1,21 +1,53 @@
 /* ============================
    PENSIUNEA ALEXANDRA — Booking
    Form validation + WhatsApp integration
+   Prices loaded from Supabase
    ============================ */
 
 const WHATSAPP_NUMBER = '40727333869';
 
+// Prices cache — loaded from Supabase or fallback
+let roomPrices = {
+    'dubla-clasic': 250,
+    'twin': 230,
+    'familie': 350,
+    'apt-predeal': 480,
+    'apt-panoramic': 600
+};
+
+let roomNames = {
+    'dubla-clasic': 'Camera Dublă Clasic',
+    'twin': 'Camera Twin',
+    'familie': 'Camera Familie',
+    'apt-predeal': 'Apartament Predeal',
+    'apt-panoramic': 'Apartament Panoramic'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+    loadRoomPrices();
     initBookingForm();
     initRoomSelector();
     restoreBookingDates();
 });
 
+async function loadRoomPrices() {
+    if (typeof db === 'undefined' || !db.getRooms) return;
+    try {
+        const rooms = await db.getRooms();
+        rooms.forEach(r => {
+            roomPrices[r.id] = r.price;
+            roomNames[r.id] = r.name;
+        });
+        updatePriceEstimate();
+    } catch (e) {
+        console.log('Using fallback prices');
+    }
+}
+
 function initBookingForm() {
     const form = document.getElementById('bookingForm');
     if (!form) return;
 
-    // WhatsApp submit
     const whatsappBtn = document.getElementById('submitWhatsApp');
     if (whatsappBtn) {
         whatsappBtn.addEventListener('click', (e) => {
@@ -24,7 +56,6 @@ function initBookingForm() {
         });
     }
 
-    // Email submit
     const emailBtn = document.getElementById('submitEmail');
     if (emailBtn) {
         emailBtn.addEventListener('click', (e) => {
@@ -33,7 +64,6 @@ function initBookingForm() {
         });
     }
 
-    // Price calculator
     const checkinInput = document.getElementById('checkin');
     const checkoutInput = document.getElementById('checkout');
     const roomInput = document.getElementById('roomType');
@@ -119,7 +149,6 @@ function validateForm() {
         }
     });
 
-    // Date validation
     const checkin = document.getElementById('checkin');
     const checkout = document.getElementById('checkout');
     if (checkin?.value && checkout?.value) {
@@ -156,14 +185,9 @@ function getFormData() {
 }
 
 function getRoomName(roomId) {
-    const names = {
-        'dubla-clasic': 'Camera Dublă Clasic (250 RON)',
-        'twin': 'Camera Twin (230 RON)',
-        'familie': 'Camera Familie (350 RON)',
-        'apt-predeal': 'Apartament Predeal (480 RON)',
-        'apt-panoramic': 'Apartament Panoramic (600 RON)'
-    };
-    return names[roomId] || roomId;
+    const price = roomPrices[roomId] || 0;
+    const name = roomNames[roomId] || roomId;
+    return `${name} (${price} RON)`;
 }
 
 function formatDateRO(dateStr) {
@@ -192,7 +216,6 @@ function sendWhatsApp() {
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
 
-    // Show confirmation
     showConfirmation('whatsapp');
 }
 
@@ -237,15 +260,7 @@ function updatePriceEstimate() {
         return;
     }
 
-    const prices = {
-        'dubla-clasic': 250,
-        'twin': 230,
-        'familie': 350,
-        'apt-predeal': 480,
-        'apt-panoramic': 600
-    };
-
-    const pricePerNight = prices[roomType] || 0;
+    const pricePerNight = roomPrices[roomType] || 0;
     const total = pricePerNight * nights;
 
     priceEl.innerHTML = `

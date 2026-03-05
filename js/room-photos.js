@@ -1,15 +1,13 @@
 /* ============================
    PENSIUNEA ALEXANDRA — Room Photos
-   Dynamic slideshow from CMS JSON data
+   Dynamic slideshow from Supabase (fallback: JSON files)
    ============================ */
 
 document.addEventListener('DOMContentLoaded', () => {
     initRoomSlideshows();
 });
 
-// Maps HTML element IDs to JSON filenames
-// RO page IDs: dubla-clasic, twin, familie, apt-predeal, apt-panoramic
-// EN page IDs: classic-double, twin, family, predeal-apt, panoramic-apt
+// Maps HTML element IDs to room IDs in the database
 const ROOM_ID_MAP = {
     'dubla-clasic': 'dubla-clasic',
     'twin': 'twin',
@@ -23,35 +21,56 @@ const ROOM_ID_MAP = {
 };
 
 async function initRoomSlideshows() {
-    for (const [elementId, jsonId] of Object.entries(ROOM_ID_MAP)) {
+    for (const [elementId, roomId] of Object.entries(ROOM_ID_MAP)) {
         const container = document.getElementById(elementId);
         if (!container) continue;
 
         const gallery = container.querySelector('.room-detail__gallery');
         if (!gallery) continue;
 
-        try {
-            const basePath = window.location.pathname.includes('/en/') ? '../' : '';
-            const response = await fetch(`${basePath}content/rooms/${jsonId}.json`);
-            if (!response.ok) continue;
+        let photos = null;
+        let price = null;
 
-            const data = await response.json();
-            if (!data.photos || data.photos.length === 0) continue;
-
-            // Build slideshow
-            buildSlideshow(gallery, data.photos, elementId);
-
-            // Update price if available
-            if (data.price) {
-                const priceEl = container.querySelector('.room-detail__price');
-                if (priceEl) {
-                    const isEN = window.location.pathname.includes('/en/');
-                    priceEl.innerHTML = `${data.price} RON <span>/ ${isEN ? 'night' : 'noapte'}</span>`;
+        // Try Supabase first
+        if (typeof db !== 'undefined' && db.getRoomWithPhotos) {
+            try {
+                const room = await db.getRoomWithPhotos(roomId);
+                if (room && room.photos && room.photos.length > 0) {
+                    photos = room.photos;
+                    price = room.price;
                 }
+            } catch (e) {
+                console.log('Supabase unavailable for room photos, trying JSON fallback');
             }
-        } catch (e) {
-            // Fallback: keep static image and price
-            console.log(`Using static data for ${elementId}`);
+        }
+
+        // Fallback to JSON files
+        if (!photos) {
+            try {
+                const basePath = window.location.pathname.includes('/en/') ? '../' : '';
+                const response = await fetch(`${basePath}content/rooms/${roomId}.json`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.photos && data.photos.length > 0) {
+                        photos = data.photos;
+                        price = data.price;
+                    }
+                }
+            } catch (e) {
+                console.log(`Using static data for ${elementId}`);
+            }
+        }
+
+        if (!photos || photos.length === 0) continue;
+
+        buildSlideshow(gallery, photos, elementId);
+
+        if (price) {
+            const priceEl = container.querySelector('.room-detail__price');
+            if (priceEl) {
+                const isEN = window.location.pathname.includes('/en/');
+                priceEl.innerHTML = `${price} RON <span>/ ${isEN ? 'night' : 'noapte'}</span>`;
+            }
         }
     }
 }
@@ -62,7 +81,6 @@ function buildSlideshow(gallery, photos, roomId) {
     gallery.innerHTML = '';
     gallery.classList.add('room-slideshow');
 
-    // Create slides
     const slidesContainer = document.createElement('div');
     slidesContainer.className = 'room-slideshow__slides';
 
@@ -79,9 +97,7 @@ function buildSlideshow(gallery, photos, roomId) {
 
     gallery.appendChild(slidesContainer);
 
-    // Only add controls if there are multiple photos
     if (photos.length > 1) {
-        // Prev/Next buttons
         const prevBtn = document.createElement('button');
         prevBtn.className = 'room-slideshow__btn room-slideshow__btn--prev';
         prevBtn.innerHTML = '‹';
@@ -92,7 +108,6 @@ function buildSlideshow(gallery, photos, roomId) {
         nextBtn.innerHTML = '›';
         nextBtn.setAttribute('aria-label', 'Next photo');
 
-        // Dots
         const dotsContainer = document.createElement('div');
         dotsContainer.className = 'room-slideshow__dots';
 
@@ -104,7 +119,6 @@ function buildSlideshow(gallery, photos, roomId) {
             dotsContainer.appendChild(dot);
         });
 
-        // Counter
         const counter = document.createElement('div');
         counter.className = 'room-slideshow__counter';
         counter.textContent = `1 / ${photos.length}`;
@@ -114,7 +128,6 @@ function buildSlideshow(gallery, photos, roomId) {
         gallery.appendChild(dotsContainer);
         gallery.appendChild(counter);
 
-        // State
         let currentIndex = 0;
 
         function goTo(index) {
@@ -137,7 +150,6 @@ function buildSlideshow(gallery, photos, roomId) {
             dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
         });
 
-        // Swipe support for mobile
         let touchStartX = 0;
         gallery.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;

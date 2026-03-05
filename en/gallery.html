@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Gallery — Pensiunea Alexandra, Predeal</title>
+    <title>Photo Gallery Accommodation Predeal — Pensiunea Alexandra</title>
     <meta name="description"
-        content="Photo gallery of Pensiunea Alexandra Predeal. Exterior, rooms, common areas, mountain surroundings.">
+        content="Photo gallery of Pensiunea Alexandra Predeal. See real photos of the exterior, accommodation rooms, BBQ courtyard, and the view towards the ski slope.">
+    <link rel="canonical" href="https://www.pensiuneaalexandra.com/en/gallery.html">
+    <link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/galerie.html">
+    <link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/gallery.html">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🏔️</text></svg>">
@@ -55,29 +58,34 @@
             </div>
             <div class="gallery-grid" id="galleryGrid" style="grid-template-columns: repeat(4, 1fr);">
                 <div class="gallery-grid__item" data-category="exterior" style="grid-column: span 2; grid-row: span 2;">
-                    <img src="../images/hero/hero-1.jpg" alt="Aerial view" loading="lazy"></div>
+                    <img src="../images/hero/hero-1.jpg" alt="pensiunea-alexandra-predeal-aerial-drone-view"
+                        loading="lazy">
+                </div>
                 <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-2.jpg"
-                        alt="Side exterior" loading="lazy"></div>
+                        alt="exterior-accommodation-predeal-near-slope" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-3.jpg"
-                        alt="Garden" loading="lazy"></div>
+                        alt="garden-predeal-guesthouse-relaxation" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-4.jpg"
-                        alt="Winter exterior" loading="lazy"></div>
+                        alt="pensiunea-alexandra-winter-snow" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="exterior"><img src="../images/hero/hero-5.jpg"
-                        alt="Panoramic" loading="lazy"></div>
+                        alt="panoramic-view-mountains-predeal-accommodation" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="camere" style="grid-column: span 2; grid-row: span 2;">
-                    <img src="../images/rooms/room-100.jpg" alt="Classic Double" loading="lazy"></div>
+                    <img src="../images/rooms/room-100.jpg" alt="photo-classic-double-room-predeal-guesthouse"
+                        loading="lazy">
+                </div>
                 <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-110.jpg"
-                        alt="Twin Room" loading="lazy"></div>
+                        alt="photo-twin-room-accommodation-predeal" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-120.jpg"
-                        alt="Room detail" loading="lazy"></div>
+                        alt="detail-design-guesthouse-room" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-130.jpg"
-                        alt="Family Room" loading="lazy"></div>
+                        alt="photo-family-room-predeal" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-150.jpg"
-                        alt="Predeal Apartment" loading="lazy"></div>
+                        alt="photo-apartment-predeal-accommodation" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="camere"><img src="../images/rooms/room-160.jpg"
-                        alt="Panoramic Apartment" loading="lazy"></div>
+                        alt="photo-panoramic-apartment-jacuzzi" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="comun" style="grid-column: span 2; grid-row: span 2;">
-                    <img src="../images/gallery/gallery-10.jpg" alt="Lobby" loading="lazy"></div>
+                    <img src="../images/gallery/gallery-10.jpg" alt="Lobby" loading="lazy">
+                </div>
                 <div class="gallery-grid__item" data-category="comun"><img src="../images/gallery/gallery-50.jpg"
                         alt="Lounge" loading="lazy"></div>
                 <div class="gallery-grid__item" data-category="comun"><img src="../images/gallery/gallery-70.jpg"
@@ -150,7 +158,61 @@
     </div>
 
     <script src="../js/main.js"></script>
-    <script>function filterGallery(c, b) { document.querySelectorAll('.gallery-filter').forEach(x => x.classList.remove('active')); b.classList.add('active'); document.querySelectorAll('.gallery-grid__item').forEach(i => { i.style.display = (c === 'all' || i.dataset.category === c) ? '' : 'none'; }); lightboxImages = []; document.querySelectorAll('.gallery-grid__item').forEach(i => { if (i.style.display !== 'none') { const img = i.querySelector('img'); if (img) lightboxImages.push(img.src); } }); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        async function loadGallery() {
+            if (typeof db === 'undefined' || !db.getGallery) return;
+            try {
+                const items = await db.getGallery('all');
+                if (items && items.length > 0) {
+                    const grid = document.getElementById('galleryGrid');
+                    grid.innerHTML = '';
+                    items.forEach((item, idx) => {
+                        const div = document.createElement('div');
+                        div.className = 'gallery-grid__item';
+                        div.dataset.category = item.category;
+                        if (idx === 0 || idx === 11 || idx === 16) {
+                            div.style.gridColumn = 'span 2';
+                            div.style.gridRow = 'span 2';
+                        }
+                        const img = document.createElement('img');
+                        // Fix paths since page is in /en/ folder
+                        const cleanSrc = item.src.startsWith('/') ? item.src.substring(1) : item.src;
+                        img.src = '../' + cleanSrc;
+                        img.alt = item.alt || '';
+                        img.loading = idx < 4 ? 'eager' : 'lazy';
+                        div.appendChild(img);
+                        grid.appendChild(div);
+                    });
+
+                    const activeFilter = document.querySelector('.gallery-filter.active');
+                    if (activeFilter) {
+                        filterGallery(activeFilter.dataset.filter, activeFilter);
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to load gallery from Supabase', err);
+            }
+        }
+
+        function filterGallery(c, b) {
+            document.querySelectorAll('.gallery-filter').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            document.querySelectorAll('.gallery-grid__item').forEach(i => {
+                i.style.display = (c === 'all' || i.dataset.category === c) ? '' : 'none';
+            });
+            lightboxImages = [];
+            document.querySelectorAll('.gallery-grid__item').forEach(i => {
+                if (i.style.display !== 'none') {
+                    const img = i.querySelector('img');
+                    if (img) lightboxImages.push(img.src);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadGallery);
+    </script>
 </body>
 
 </html>

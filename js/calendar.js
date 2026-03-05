@@ -1,6 +1,6 @@
 /* ============================
    PENSIUNEA ALEXANDRA — Calendar
-   Availability calendar with room selection
+   Availability calendar with Supabase backend
    ============================ */
 
 const ROOM_TYPES = [
@@ -29,45 +29,84 @@ class AvailabilityCalendar {
         this.availability = {};
         this.onDateSelect = options.onDateSelect || null;
         this.isAdmin = options.isAdmin || false;
+        this.loading = false;
 
-        this.loadAvailability();
+        this.loadAndRender();
+    }
+
+    async loadAndRender() {
+        this.loading = true;
+        this.render();
+        await this.loadAvailability();
+        this.loading = false;
         this.render();
     }
 
-    loadAvailability() {
+    async loadAvailability() {
+        if (typeof db !== 'undefined' && db.getAvailability) {
+            try {
+                this.availability = await db.getAvailability(
+                    this.selectedRoom, this.currentYear, this.currentMonth
+                );
+                return;
+            } catch (e) {
+                console.warn('Supabase unavailable, falling back to localStorage');
+            }
+        }
+        // Fallback to localStorage
         const stored = localStorage.getItem('pensiunea_availability');
         if (stored) {
             try {
-                this.availability = JSON.parse(stored);
-            } catch (e) {
+                const all = JSON.parse(stored);
                 this.availability = {};
-            }
+                const roomData = all[this.selectedRoom];
+                if (roomData) {
+                    Object.keys(roomData).forEach(k => {
+                        this.availability[k] = roomData[k];
+                    });
+                }
+            } catch (e) { this.availability = {}; }
         }
-    }
-
-    saveAvailability() {
-        localStorage.setItem('pensiunea_availability', JSON.stringify(this.availability));
     }
 
     isOccupied(dateStr) {
-        const roomData = this.availability[this.selectedRoom];
-        if (!roomData) return false;
-        return roomData[dateStr] === 'occupied';
+        return this.availability[dateStr] === 'occupied';
     }
 
-    toggleOccupied(dateStr) {
-        if (!this.availability[this.selectedRoom]) {
-            this.availability[this.selectedRoom] = {};
+    async toggleOccupied(dateStr) {
+        if (typeof db !== 'undefined' && db.toggleAvailability) {
+            try {
+                this.container.style.opacity = '0.6';
+                const isNowOccupied = await db.toggleAvailability(this.selectedRoom, dateStr);
+                if (isNowOccupied) {
+                    this.availability[dateStr] = 'occupied';
+                } else {
+                    delete this.availability[dateStr];
+                }
+                this.container.style.opacity = '1';
+                this.render();
+                return;
+            } catch (e) {
+                this.container.style.opacity = '1';
+                console.error('Toggle failed:', e);
+            }
         }
-
-        if (this.availability[this.selectedRoom][dateStr] === 'occupied') {
-            delete this.availability[this.selectedRoom][dateStr];
+        // Fallback to localStorage
+        if (this.availability[dateStr] === 'occupied') {
+            delete this.availability[dateStr];
         } else {
-            this.availability[this.selectedRoom][dateStr] = 'occupied';
+            this.availability[dateStr] = 'occupied';
         }
-
-        this.saveAvailability();
+        this.saveToLocalStorage();
         this.render();
+    }
+
+    saveToLocalStorage() {
+        const stored = localStorage.getItem('pensiunea_availability');
+        let all = {};
+        try { all = JSON.parse(stored) || {}; } catch (e) { all = {}; }
+        all[this.selectedRoom] = this.availability;
+        localStorage.setItem('pensiunea_availability', JSON.stringify(all));
     }
 
     formatDate(year, month, day) {
@@ -80,7 +119,7 @@ class AvailabilityCalendar {
 
     getFirstDayOfMonth(year, month) {
         const day = new Date(year, month, 1).getDay();
-        return day === 0 ? 6 : day - 1; // Monday = 0
+        return day === 0 ? 6 : day - 1;
     }
 
     prevMonth() {
@@ -89,7 +128,7 @@ class AvailabilityCalendar {
             this.currentMonth = 11;
             this.currentYear--;
         }
-        this.render();
+        this.loadAndRender();
     }
 
     nextMonth() {
@@ -98,14 +137,13 @@ class AvailabilityCalendar {
             this.currentMonth = 0;
             this.currentYear++;
         }
-        this.render();
+        this.loadAndRender();
     }
 
     selectRoom(roomId) {
         this.selectedRoom = roomId;
-        this.render();
+        this.loadAndRender();
 
-        // Update room selector buttons
         document.querySelectorAll('.room-selector__btn, .admin-room-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.room === roomId);
         });
@@ -129,7 +167,6 @@ class AvailabilityCalendar {
             this.selectedCheckin = dateStr;
             this.selectedCheckout = null;
         } else if (dateStr > this.selectedCheckin) {
-            // Check if any occupied dates in range
             const start = new Date(this.selectedCheckin);
             const end = new Date(dateStr);
             let hasOccupied = false;
@@ -166,6 +203,16 @@ class AvailabilityCalendar {
     }
 
     render() {
+        if (this.loading) {
+            this.container.innerHTML = `
+        <div class="calendar" style="text-align: center; padding: 40px;">
+          <div style="display: inline-block; width: 24px; height: 24px; border: 3px solid var(--gray-300); border-top-color: var(--forest); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <p style="margin-top: 12px; color: var(--gray-500); font-size: 0.9rem;">Se încarcă calendarul...</p>
+          <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+        </div>`;
+            return;
+        }
+
         const daysInMonth = this.getDaysInMonth(this.currentYear, this.currentMonth);
         const firstDay = this.getFirstDayOfMonth(this.currentYear, this.currentMonth);
         const today = new Date();
@@ -185,12 +232,10 @@ class AvailabilityCalendar {
         <div class="calendar__days">
     `;
 
-        // Empty cells before first day
         for (let i = 0; i < firstDay; i++) {
             html += `<span class="calendar__day calendar__day--empty"></span>`;
         }
 
-        // Day cells
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = this.formatDate(this.currentYear, this.currentMonth, day);
             const date = new Date(this.currentYear, this.currentMonth, day);
