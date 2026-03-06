@@ -178,8 +178,12 @@
                         }
                         const img = document.createElement('img');
                         // Fix paths since page is in /en/ folder
-                        const cleanSrc = item.src.startsWith('/') ? item.src.substring(1) : item.src;
-                        img.src = '../' + cleanSrc;
+                        if (item.src.startsWith('http')) {
+                            img.src = item.src;
+                        } else {
+                            const cleanSrc = item.src.startsWith('/') ? item.src.substring(1) : item.src;
+                            img.src = '../' + cleanSrc;
+                        }
                         img.alt = item.alt || '';
                         img.loading = idx < 4 ? 'eager' : 'lazy';
                         div.appendChild(img);

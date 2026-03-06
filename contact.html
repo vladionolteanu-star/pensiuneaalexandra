@@ -109,6 +109,36 @@
                         </div>
                     </div>
 
+                    <!-- Contact Form -->
+                    <div
+                        style="margin-top: var(--space-2xl); background: var(--cream); padding: var(--space-xl); border-radius: var(--radius-lg);">
+                        <h3 style="margin-bottom: var(--space-md);">Trimite-ne un mesaj</h3>
+                        <form action="https://formsubmit.co/vladionolteanu@gmail.com" method="POST" id="contactForm">
+                            <!-- Anti-spam honeypot -->
+                            <input type="text" name="_honey" style="display:none">
+                            <!-- Disable captcha -->
+                            <input type="hidden" name="_captcha" value="false">
+                            <!-- Success page -->
+                            <input type="hidden" name="_next" id="formsubmitNext" value="">
+                            <input type="hidden" name="_subject" value="Mesaj de contact nou - Pensiunea Alexandra">
+                            <input type="hidden" name="_template" value="box">
+
+                            <div class="form-group">
+                                <label for="contactName">Numele tău *</label>
+                                <input type="text" id="contactName" name="Nume" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email-ul tău *</label>
+                                <input type="email" id="contactEmail" name="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Mesajul tău *</label>
+                                <textarea id="contactMessage" name="Mesaj" required rows="4"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn--primary" style="width: 100%;">Trimite Mesajul</button>
+                        </form>
+                    </div>
+
                     <!-- Directions -->
                     <div id="directii" style="margin-top: var(--space-2xl);">
                         <h3 style="margin-bottom: var(--space-md);">Cum ajungi</h3>
@@ -239,6 +269,28 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+        // Set the success redirect URL to the current page with a success parameter
+        document.getElementById('formsubmitNext').value = window.location.href.split('?')[0] + '?success=true';
+
+        // Check if form was just submitted
+        if (window.location.search.includes('success=true')) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10001;
+                display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease;
+            `;
+            modal.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 16px; text-align: center; max-width: 400px; margin: 16px;">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">✉️</div>
+                    <h3 style="font-family: var(--font-heading); margin-bottom: 12px;">Mesaj trimis!</h3>
+                    <p style="color: var(--gray-500); margin-bottom: 24px; line-height: 1.5;">Îți mulțumim pentru mesaj! Te vom contacta în scurt timp.</p>
+                    <button onclick="this.closest('div[style]').remove(); window.history.replaceState({}, document.title, window.location.pathname);" class="btn btn--primary" style="background: var(--forest); color: white; padding: 12px 32px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600;">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+    </script>
 </body>
 
 </html>

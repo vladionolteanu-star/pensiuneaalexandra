@@ -132,6 +132,93 @@ const db = {
         if (error) { console.error('updateRoomPrice error:', error); return false; }
         _roomsCache = null; // invalidate cache
         return true;
+    },
+
+    // ====== ADMIN: Storage & Photos ======
+
+    async uploadImage(file, path) {
+        const { data, error } = await supabaseClient.storage
+            .from('images')
+            .upload(path, file, { cacheControl: '3600', upsert: false });
+        if (error) { console.error('uploadImage error:', error); return { error }; }
+
+        const { data: publicData } = supabaseClient.storage
+            .from('images')
+            .getPublicUrl(path);
+
+        console.log('Upload public URL:', publicData.publicUrl);
+        return { url: publicData.publicUrl };
+    },
+
+    async deleteImage(path) {
+        // extract path from url if full url is provided
+        let storagePath = path;
+        if (path.includes('/images/')) {
+            storagePath = path.split('/images/')[1];
+        }
+
+        const { error } = await supabaseClient.storage
+            .from('images')
+            .remove([storagePath]);
+
+        if (error) { console.error('deleteImage error:', error); return { error }; }
+        return { success: true };
+    },
+
+    // Room Photos
+    async addRoomPhoto(roomId, src, alt, sortOrder = 99) {
+        const { data, error } = await supabaseClient
+            .from('room_photos')
+            .insert({ room_id: roomId, src, alt, sort_order: sortOrder })
+            .select('*')
+            .single();
+        if (error) { console.error('addRoomPhoto error:', error); return { error }; }
+        _roomsCache = null;
+        return { data };
+    },
+
+    async deleteRoomPhoto(photoId, imageUrl) {
+        // Delete from DB
+        const { error: dbError } = await supabaseClient
+            .from('room_photos')
+            .delete()
+            .eq('id', photoId);
+        if (dbError) { console.error('deleteRoomPhoto DB error:', dbError); return { error: dbError }; }
+
+        // Delete from storage if it's a Supabase storage image
+        if (imageUrl && imageUrl.includes('supabase.co/storage')) {
+            await this.deleteImage(imageUrl);
+        }
+
+        _roomsCache = null;
+        return { success: true };
+    },
+
+    // Gallery Photos
+    async addGalleryPhoto(src, category, alt = '', sortOrder = 99) {
+        const { data, error } = await supabaseClient
+            .from('gallery')
+            .insert({ src, category, alt, sort_order: sortOrder })
+            .select('*')
+            .single();
+        if (error) { console.error('addGalleryPhoto error:', error); return { error }; }
+        return { data };
+    },
+
+    async deleteGalleryPhoto(photoId, imageUrl) {
+        // Delete from DB
+        const { error: dbError } = await supabaseClient
+            .from('gallery')
+            .delete()
+            .eq('id', photoId);
+        if (dbError) { console.error('deleteGalleryPhoto DB error:', dbError); return { error: dbError }; }
+
+        // Delete from storage if it's a Supabase storage image
+        if (imageUrl && imageUrl.includes('supabase.co/storage')) {
+            await this.deleteImage(imageUrl);
+        }
+
+        return { success: true };
     }
 };
 

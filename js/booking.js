@@ -219,7 +219,7 @@ function sendWhatsApp() {
     showConfirmation('whatsapp');
 }
 
-function sendEmail() {
+async function sendEmail() {
     const data = getFormData();
     const nights = calculateNights(data.checkin, data.checkout);
 
@@ -236,7 +236,48 @@ function sendEmail() {
     if (data.children && data.children !== '0') body += `Copii: ${data.children}\n`;
     if (data.message) body += `\nMesaj: ${data.message}\n`;
 
-    window.location.href = `mailto:vladionolteanu@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const btn = document.getElementById('submitEmail');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Se trimite...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('https://formsubmit.co/ajax/vladionolteanu@gmail.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                _subject: subject,
+                Nume: data.name,
+                Telefon: data.phone,
+                Email_Client: data.email || 'Nu a fost furnizat',
+                Check_in: formatDateRO(data.checkin),
+                Check_out: formatDateRO(data.checkout),
+                Nopti: nights,
+                Camera: getRoomName(data.roomType),
+                Adulti: data.guests || '2',
+                Copii: data.children || '0',
+                Mesaj: data.message || '-',
+                _template: 'box'
+            })
+        });
+
+        if (response.ok) {
+            showConfirmation('email');
+            document.getElementById('bookingForm').reset();
+            updatePriceEstimate();
+        } else {
+            throw new Error('Netowrk response was not ok');
+        }
+    } catch (error) {
+        console.error('Email send failed:', error);
+        alert('Eroare la trimiterea emailului. Te rugăm să încerci pe WhatsApp s-au să ne suni direct.');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
 }
 
 function calculateNights(checkin, checkout) {
@@ -284,7 +325,7 @@ function showConfirmation(type) {
     const icon = type === 'whatsapp' ? '💬' : '✉️';
     const message = type === 'whatsapp'
         ? 'Cererea ta a fost trimisă pe WhatsApp! Vei primi un răspuns în curând.'
-        : 'Emailul a fost deschis în clientul tău de email. Trimite-l pentru a finaliza cererea.';
+        : 'Rezervarea ta a fost trimisă cu succes pe email! Te vom contacta în cel mai scurt timp pentru confirmare.';
 
     modal.innerHTML = `
     <div style="background: white; padding: 40px; border-radius: 16px; text-align: center; max-width: 400px; margin: 16px;">

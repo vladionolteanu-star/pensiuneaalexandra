@@ -159,8 +159,60 @@
                 <h3 style="margin-bottom: var(--space-lg);">💰 Prețuri camere</h3>
                 <p style="color: var(--gray-500); margin-bottom: var(--space-xl);">Modifică prețul per noapte. Salvarea
                     este instantanee.</p>
-                <div id="priceEditor" style="display: grid; gap: 12px; max-width: 500px;">
+                <div id="priceEditor"
+                    style="display: grid; gap: 12px; max-width: 500px; margin-bottom: var(--space-2xl);">
                     <p style="color: var(--gray-500);">Se încarcă...</p>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--gray-200); margin-bottom: var(--space-2xl);">
+
+                <h3 style="margin-bottom: var(--space-lg);">📸 Poze Camere</h3>
+                <div style="margin-bottom: var(--space-lg);">
+                    <select id="adminRoomPhotoSelect" class="form-group"
+                        style="max-width: 300px; margin-bottom: var(--space-md);" onchange="loadAdminRoomPhotos()">
+                        <option value="dubla-clasic">Camera Dublă Clasic</option>
+                        <option value="twin">Camera Twin</option>
+                        <option value="familie">Camera Familie</option>
+                        <option value="apt-predeal">Apt. Predeal</option>
+                        <option value="apt-panoramic">Apt. Panoramic</option>
+                    </select>
+                    <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                        <input type="file" id="adminRoomPhotoUpload" accept="image/png, image/jpeg, image/webp"
+                            style="display: none;" onchange="handleRoomPhotoUpload(this)">
+                        <button class="btn btn--secondary btn--sm"
+                            onclick="document.getElementById('adminRoomPhotoUpload').click()">+ Adaugă poză
+                            cameră</button>
+                        <span id="roomUploadStatus" style="font-size: 0.85rem; color: var(--gray-500);"></span>
+                    </div>
+                </div>
+                <div id="adminRoomPhotosGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-2xl);">
+                    <!-- Room photos will be loaded here -->
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--gray-200); margin-bottom: var(--space-2xl);">
+
+                <h3 style="margin-bottom: var(--space-lg);">🖼️ Poze Galerie</h3>
+                <div style="margin-bottom: var(--space-lg);">
+                    <select id="adminGalleryCategory" class="form-group"
+                        style="max-width: 300px; margin-bottom: var(--space-md);">
+                        <option value="exterior">Exterior</option>
+                        <option value="camere">Camere</option>
+                        <option value="facilitati">Facilități</option>
+                        <option value="imprejurimi">Împrejurimi</option>
+                    </select>
+                    <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                        <input type="file" id="adminGalleryPhotoUpload" accept="image/png, image/jpeg, image/webp"
+                            style="display: none;" onchange="handleGalleryPhotoUpload(this)">
+                        <button class="btn btn--secondary btn--sm"
+                            onclick="document.getElementById('adminGalleryPhotoUpload').click()">+ Adaugă poză
+                            galerie</button>
+                        <span id="galleryUploadStatus" style="font-size: 0.85rem; color: var(--gray-500);"></span>
+                    </div>
+                </div>
+                <div id="adminGalleryPhotosGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-md);">
+                    <!-- Gallery photos will be loaded here -->
                 </div>
             </div>
 
@@ -291,6 +343,8 @@
             document.getElementById('adminLogin').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             loadPriceEditor();
+            loadAdminRoomPhotos();
+            loadAdminGalleryPhotos();
         }
 
         // Auto-login if session exists
@@ -327,6 +381,161 @@
             var ok = await db.updateRoomPrice(roomId, price);
             status.textContent = ok ? '✅' : '❌';
             setTimeout(function () { status.textContent = ''; }, 2000);
+        }
+
+        // ====== PHOTO MANAGEMENT ======
+
+        // --- Room Photos ---
+        async function loadAdminRoomPhotos() {
+            var roomId = document.getElementById('adminRoomPhotoSelect').value;
+            var grid = document.getElementById('adminRoomPhotosGrid');
+            grid.innerHTML = '<p style="color: var(--gray-500); grid-column: 1 / -1;">Se încarcă...</p>';
+
+            var room = await db.getRoomWithPhotos(roomId);
+            if (!room || !room.photos || room.photos.length === 0) {
+                grid.innerHTML = '<p style="color: var(--gray-500); grid-column: 1 / -1;">Nu sunt poze pentru această cameră.</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            room.photos.forEach(function (photo) {
+                grid.appendChild(createAdminPhotoCard(photo.src, function () {
+                    deleteRoomPhoto(photo.id, photo.src);
+                }));
+            });
+        }
+
+        async function handleRoomPhotoUpload(input) {
+            if (!input.files || input.files.length === 0) return;
+            var file = input.files[0];
+            var roomId = document.getElementById('adminRoomPhotoSelect').value;
+            var status = document.getElementById('roomUploadStatus');
+
+            status.textContent = '⏳ Se încarcă...';
+            var safeName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '');
+            var storagePath = 'rooms/' + roomId + '/' + safeName;
+
+            // 1. Upload to storage
+            var uploadRes = await db.uploadImage(file, storagePath);
+            if (uploadRes.error) {
+                status.textContent = '❌ Eroare la încărcare (Storage)';
+                return;
+            }
+
+            // 2. Add to database
+            var dbRes = await db.addRoomPhoto(roomId, uploadRes.url, `Poza ${roomId}`);
+            if (dbRes.error) {
+                status.textContent = '❌ Eroare la salvarea în baza de date';
+                return;
+            }
+
+            status.textContent = '✅ Încărcare reușită (va apărea după refresh cache)';
+            input.value = ''; // reset input
+            setTimeout(() => { status.textContent = ''; }, 3000);
+
+            // Refresh list
+            loadAdminRoomPhotos();
+        }
+
+        async function deleteRoomPhoto(photoId, src) {
+            if (!confirm('Ești sigur că vrei să ștergi această poză?')) return;
+            var grid = document.getElementById('adminRoomPhotosGrid');
+            grid.style.opacity = '0.5';
+
+            await db.deleteRoomPhoto(photoId, src);
+            await loadAdminRoomPhotos(); // refresh
+
+            grid.style.opacity = '1';
+        }
+
+        // --- Gallery Photos ---
+        async function loadAdminGalleryPhotos() {
+            var grid = document.getElementById('adminGalleryPhotosGrid');
+            grid.innerHTML = '<p style="color: var(--gray-500); grid-column: 1 / -1;">Se încarcă...</p>';
+
+            var photos = await db.getGallery('all');
+            if (!photos || photos.length === 0) {
+                grid.innerHTML = '<p style="color: var(--gray-500); grid-column: 1 / -1;">Nu sunt poze în galerie.</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            photos.forEach(function (photo) {
+                grid.appendChild(createAdminPhotoCard(photo.src, function () {
+                    deleteGalleryPhoto(photo.id, photo.src);
+                }, photo.category));
+            });
+        }
+
+        async function handleGalleryPhotoUpload(input) {
+            if (!input.files || input.files.length === 0) return;
+            var file = input.files[0];
+            var category = document.getElementById('adminGalleryCategory').value;
+            var status = document.getElementById('galleryUploadStatus');
+
+            status.textContent = '⏳ Se încarcă...';
+            var safeName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '');
+            var storagePath = 'gallery/' + category + '/' + safeName;
+
+            // 1. Upload to storage
+            var uploadRes = await db.uploadImage(file, storagePath);
+            if (uploadRes.error) {
+                status.textContent = '❌ Eroare la încărcare (Storage)';
+                return;
+            }
+
+            // 2. Add to database
+            var dbRes = await db.addGalleryPhoto(uploadRes.url, category, `Poza galerie ${category}`);
+            if (dbRes.error) {
+                status.textContent = '❌ Eroare la salvarea în baza de date';
+                return;
+            }
+
+            status.textContent = '✅ Încărcare reușită!';
+            input.value = ''; // reset
+            setTimeout(() => { status.textContent = ''; }, 3000);
+
+            // Refresh list
+            loadAdminGalleryPhotos();
+        }
+
+        async function deleteGalleryPhoto(photoId, src) {
+            if (!confirm('Ești sigur că vrei să ștergi această poză?')) return;
+            var grid = document.getElementById('adminGalleryPhotosGrid');
+            grid.style.opacity = '0.5';
+
+            await db.deleteGalleryPhoto(photoId, src);
+            await loadAdminGalleryPhotos(); // refresh
+
+            grid.style.opacity = '1';
+        }
+
+        // --- Helper functions ---
+        function createAdminPhotoCard(src, onDeleteClick, label) {
+            var card = document.createElement('div');
+            card.style.cssText = 'position: relative; border-radius: var(--radius-sm); overflow: hidden; background: #eee; aspect-ratio: 4/3;';
+
+            var img = document.createElement('img');
+            img.src = src;
+            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+            img.loading = "lazy";
+
+            var delBtn = document.createElement('button');
+            delBtn.innerHTML = '🗑️';
+            delBtn.style.cssText = 'position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);';
+            delBtn.onclick = onDeleteClick;
+
+            card.appendChild(img);
+            card.appendChild(delBtn);
+
+            if (label) {
+                var labelEl = document.createElement('div');
+                labelEl.textContent = label;
+                labelEl.style.cssText = 'position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; font-size: 0.75rem; padding: 4px 8px; text-transform: capitalize;';
+                card.appendChild(labelEl);
+            }
+
+            return card;
         }
 
         // ====== TAB SWITCHING ======

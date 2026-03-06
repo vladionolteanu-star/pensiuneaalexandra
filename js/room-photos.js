@@ -86,8 +86,14 @@ function buildSlideshow(gallery, photos, roomId) {
 
     photos.forEach((photo, index) => {
         const img = document.createElement('img');
-        const src = photo.src.startsWith('/') ? `${imgPrefix}${photo.src}` : `${imgPrefix}/${photo.src}`;
-        img.src = src;
+        let src = photo.src;
+        if (src.startsWith('http')) {
+            // Already an absolute URL from Supabase
+            img.src = src;
+        } else {
+            // Relative URL (fallback images or badly saved images)
+            img.src = src.startsWith('/') ? `${imgPrefix}${src}` : `${imgPrefix}/${src}`;
+        }
         img.alt = photo.alt || '';
         img.loading = index === 0 ? 'eager' : 'lazy';
         img.className = `room-slideshow__img ${index === 0 ? 'active' : ''}`;
