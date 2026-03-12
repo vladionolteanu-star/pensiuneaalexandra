@@ -3,75 +3,94 @@
   <!-- Romanian language routes -->
   <url>
     <loc>https://www.pensiuneaalexandra.com/</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/index.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/index.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/camere.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/rooms.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/camere.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/rooms.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/galerie.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/gallery.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/galerie.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/gallery.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/rezervare.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/booking.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/rezervare.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/booking.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/contact.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/contact.html"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/contact.html"/>
   </url>
 
   <!-- English language routes -->
   <url>
     <loc>https://www.pensiuneaalexandra.com/en/index.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/index.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/index.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/en/rooms.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/camere.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/rooms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/rooms.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/en/gallery.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/galerie.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/gallery.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/gallery.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/en/booking.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/rezervare.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/booking.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/booking.html"/>
   </url>
   <url>
     <loc>https://www.pensiuneaalexandra.com/en/contact.html</loc>
+    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/contact.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/contact.html"/>
   </url>
 </urlset>
