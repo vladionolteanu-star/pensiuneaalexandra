@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLightbox();
   initBookingStrip();
   initScrollAnimations();
+  initDynamicContent();
 });
 
 /* --- Header scroll effect --- */
@@ -207,4 +208,28 @@ function initGalleryFilters() {
       });
     });
   });
+}
+
+/* --- Dynamic Content Fetch --- */
+async function initDynamicContent() {
+  if (typeof window.db === 'undefined') return;
+
+  try {
+    // 1. Site Content overrides
+    const siteContent = await window.db.getSiteContent();
+    document.querySelectorAll('[data-site-content]').forEach(el => {
+      const key = el.getAttribute('data-site-content');
+      if (siteContent[key]) {
+        el.innerHTML = siteContent[key];
+      }
+    });
+
+    // 2. Min Price for CTAs
+    const minPrice = await window.db.getMinPrice();
+    document.querySelectorAll('.dynamic-min-price').forEach(el => {
+      el.textContent = minPrice;
+    });
+  } catch (err) {
+    console.error('Error loading dynamic content:', err);
+  }
 }

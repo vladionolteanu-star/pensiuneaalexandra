@@ -146,11 +146,11 @@
         <div class="container">
 
             <!-- Tabs -->
-            <div class="admin-tabs">
-                <button class="admin-tab active" data-tab="content" onclick="switchTab(this)">📸 Conținut (Poze &
-                    Prețuri)</button>
-                <button class="admin-tab" data-tab="calendar" onclick="switchTab(this)">📅 Calendar
-                    Disponibilitate</button>
+            <div class="admin-tabs" style="overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;">
+                <button class="admin-tab active" data-tab="content" onclick="switchTab(this)">📸 Poze & Prețuri</button>
+                <button class="admin-tab" data-tab="offers" onclick="switchTab(this)">🏷️ Oferte</button>
+                <button class="admin-tab" data-tab="sitecontent" onclick="switchTab(this)">✏️ Texte Site</button>
+                <button class="admin-tab" data-tab="calendar" onclick="switchTab(this)">📅 Calendar</button>
                 <button class="admin-tab" data-tab="whatsapp" onclick="switchTab(this)">💬 WhatsApp Rapid</button>
             </div>
 
@@ -213,6 +213,47 @@
                 <div id="adminGalleryPhotosGrid"
                     style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-md);">
                     <!-- Gallery photos will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Tab: Offers -->
+            <div class="admin-section" id="tab-offers">
+                <div style="display: flex; gap: var(--space-xl); align-items: flex-start; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 300px; background: var(--cream); padding: var(--space-xl); border-radius: var(--radius-lg);">
+                        <h3 style="margin-bottom: var(--space-lg);">Adaugă / Editează Ofertă</h3>
+                        <div class="form-group"><label>Titlu (RO)</label><input type="text" id="ofertaTitluRo" placeholder="ex: Paște 2026"></div>
+                        <div class="form-group"><label>Titlu (EN)</label><input type="text" id="ofertaTitluEn" placeholder="ex: Easter 2026 Package"></div>
+                        <div class="form-group"><label>Descriere (RO)</label><textarea id="ofertaDescRo" rows="4" style="width: 100%; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); padding: 8px;"></textarea></div>
+                        <div class="form-group"><label>Descriere (EN)</label><textarea id="ofertaDescEn" rows="4" style="width: 100%; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); padding: 8px;"></textarea></div>
+                        <div class="form-group"><label>Preț afișat (text scurt)</label><input type="text" id="ofertaPret" placeholder="ex: 1200 RON / persoană"></div>
+                        <div class="form-group">
+                            <label>Activă?</label>
+                            <select id="ofertaStatus">
+                                <option value="true">DA (Afișată pe site)</option>
+                                <option value="false">NU (Ascunsă)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: var(--space-lg);">
+                            <label>Imagine principală</label>
+                            <input type="file" id="ofertaImageUpload" accept="image/*">
+                            <p style="font-size: 0.8rem; color: var(--gray-500); margin-top: 4px;">Dacă nu selectezi nimic, se va păstra imaginea actuală.</p>
+                        </div>
+                        <button class="btn btn--primary" id="saveOfferBtn" onclick="saveOffer()" style="width: 100%;">Adaugă Ofertă Nouă</button>
+                        <button class="btn btn--secondary" id="cancelOfferBtn" onclick="cancelOfferEdit()" style="width: 100%; margin-top: 8px; display: none;">Anulează Editarea</button>
+                    </div>
+                    <div style="flex: 2; min-width: 300px;">
+                        <h3 style="margin-bottom: var(--space-lg);">Oferte Existente</h3>
+                        <div id="adminOffersGrid" style="display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Site Content -->
+            <div class="admin-section" id="tab-sitecontent">
+                <div style="background: var(--cream); padding: var(--space-xl); border-radius: var(--radius-lg); max-width: 800px;">
+                    <h3 style="margin-bottom: var(--space-md);">Texte Importante Site</h3>
+                    <p style="color: var(--gray-500); margin-bottom: var(--space-xl);">Modifică textul din banner-ul de final (Apelul la acțiune).</p>
+                    <div id="adminContentForm"></div>
                 </div>
             </div>
 
@@ -345,6 +386,8 @@
             loadPriceEditor();
             loadAdminRoomPhotos();
             loadAdminGalleryPhotos();
+            loadAdminOffers();
+            loadSiteContent();
         }
 
         // Auto-login if session exists
@@ -615,6 +658,197 @@
             };
             var text = encodeURIComponent(messages[type] || '');
             window.open('https://wa.me/' + phone + '?text=' + text, '_blank');
+        }
+
+        // ====== OFFERS ======
+        let offersList = [];
+        let editingOfferId = null;
+
+        async function loadAdminOffers() {
+            var grid = document.getElementById('adminOffersGrid');
+            grid.innerHTML = '<p style="color: var(--gray-500);">Se încarcă orferte...</p>';
+            offersList = await db.getAllOffers();
+            
+            if (!offersList || offersList.length === 0) {
+                grid.innerHTML = '<p style="color: var(--gray-500);">Nu există oferte.</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            offersList.forEach(offer => {
+                var card = document.createElement('div');
+                card.style.cssText = `background: var(--cream); border: 1px solid var(--gray-200); padding: 16px; border-radius: 8px; position: relative; opacity: ${offer.active ? '1' : '0.6'}`;
+                
+                var top = document.createElement('div');
+                top.style.cssText = 'display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;';
+                
+                var title = document.createElement('h4');
+                title.textContent = offer.title_ro || 'Fără titlu';
+                title.style.margin = '0';
+                
+                var status = document.createElement('span');
+                status.textContent = offer.active ? 'AFIȘAT' : 'ASCUNS';
+                status.style.cssText = `font-size: 0.75rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; background: ${offer.active ? 'var(--success)' : 'var(--gray-300)'}; color: white;`;
+                
+                top.appendChild(title);
+                top.appendChild(status);
+                
+                var price = document.createElement('div');
+                price.textContent = offer.price || 'Fără preț setat';
+                price.style.cssText = 'color: var(--gold); font-weight: bold; margin-bottom: 8px;';
+                
+                var actions = document.createElement('div');
+                actions.style.cssText = 'display: flex; gap: 8px; margin-top: 16px; border-top: 1px solid var(--gray-200); padding-top: 12px;';
+                
+                var editBtn = document.createElement('button');
+                editBtn.className = 'btn btn--secondary btn--sm';
+                editBtn.textContent = 'Editează';
+                editBtn.onclick = () => editOffer(offer);
+                
+                var delBtn = document.createElement('button');
+                delBtn.className = 'btn btn--sm';
+                delBtn.textContent = 'Șterge';
+                delBtn.style.color = 'var(--danger)';
+                delBtn.style.background = 'transparent';
+                delBtn.style.border = '1px solid var(--danger)';
+                delBtn.onclick = () => deleteOfferAdmin(offer.id);
+                
+                actions.appendChild(editBtn);
+                actions.appendChild(delBtn);
+                
+                card.appendChild(top);
+                card.appendChild(price);
+                card.appendChild(actions);
+                grid.appendChild(card);
+            });
+        }
+
+        async function saveOffer() {
+            var btn = document.getElementById('saveOfferBtn');
+            btn.textContent = 'Trimitere...'; btn.disabled = true;
+            
+            var data = {
+                title_ro: document.getElementById('ofertaTitluRo').value,
+                title_en: document.getElementById('ofertaTitluEn').value,
+                description_ro: document.getElementById('ofertaDescRo').value,
+                description_en: document.getElementById('ofertaDescEn').value,
+                price: document.getElementById('ofertaPret').value,
+                active: document.getElementById('ofertaStatus').value === 'true'
+            };
+            
+            var fileInput = document.getElementById('ofertaImageUpload');
+            if (fileInput.files && fileInput.files.length > 0) {
+                var file = fileInput.files[0];
+                var safeName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '');
+                var res = await db.uploadImage(file, 'offers/' + safeName);
+                if (!res.error) data.image_url = res.url;
+            } else if (!editingOfferId) {
+                data.image_url = 'images/hero/hero-2.jpg';
+            }
+            
+            var ok;
+            if (editingOfferId) ok = await db.updateOffer(editingOfferId, data);
+            else ok = await db.createOffer(data);
+            
+            btn.textContent = 'Salvează Ofertă'; btn.disabled = false;
+            if (ok.error) { alert('Eroare: ' + ok.error); return; }
+            
+            cancelOfferEdit();
+            loadAdminOffers();
+        }
+
+        function editOffer(offer) {
+            editingOfferId = offer.id;
+            document.getElementById('ofertaTitluRo').value = offer.title_ro || '';
+            document.getElementById('ofertaTitluEn').value = offer.title_en || '';
+            document.getElementById('ofertaDescRo').value = offer.description_ro || '';
+            document.getElementById('ofertaDescEn').value = offer.description_en || '';
+            document.getElementById('ofertaPret').value = offer.price || '';
+            document.getElementById('ofertaStatus').value = offer.active ? 'true' : 'false';
+            document.getElementById('saveOfferBtn').textContent = 'Actualizează Ofertă';
+            document.getElementById('cancelOfferBtn').style.display = 'inline-block';
+            document.getElementById('tab-offers').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelOfferEdit() {
+            editingOfferId = null;
+            document.getElementById('ofertaTitluRo').value = '';
+            document.getElementById('ofertaTitluEn').value = '';
+            document.getElementById('ofertaDescRo').value = '';
+            document.getElementById('ofertaDescEn').value = '';
+            document.getElementById('ofertaPret').value = '';
+            document.getElementById('ofertaStatus').value = 'true';
+            document.getElementById('ofertaImageUpload').value = '';
+            document.getElementById('saveOfferBtn').textContent = 'Adaugă Ofertă Nouă';
+            document.getElementById('cancelOfferBtn').style.display = 'none';
+        }
+
+        async function deleteOfferAdmin(id) {
+            if (!confirm('Sigur ștergi oferta?')) return;
+            await db.deleteOffer(id);
+            loadAdminOffers();
+        }
+
+        // ====== SITE CONTENT ======
+        async function loadSiteContent() {
+            var grid = document.getElementById('adminContentForm');
+            grid.innerHTML = '<p>Se încarcă...</p>';
+            
+            var content = await db.getSiteContent();
+            const fields = [
+                { id: 'cta_title_ro', label: 'Titlu CTA Ofertă (RO)', default: 'Rezervă-ți vacanța la munte' },
+                { id: 'cta_title_en', label: 'Titlu CTA Ofertă (EN)', default: 'Book your mountain getaway' },
+                { id: 'cta_subtitle_ro', label: 'Detalii CTA Ofertă (RO)', textarea: true, default: 'Prețuri de la <span class="dynamic-min-price">230</span> RON / noapte. Check-in de la ora 14:00. Confirmare rapidă pe WhatsApp.' },
+                { id: 'cta_subtitle_en', label: 'Detalii CTA Ofertă (EN)', textarea: true, default: 'Starting from <span class="dynamic-min-price">230</span> RON / night. Check-in from 14:00. Quick confirmation via WhatsApp.' }
+            ];
+            
+            grid.innerHTML = '';
+            fields.forEach(f => {
+                var fg = document.createElement('div');
+                fg.className = 'form-group';
+                fg.style.marginBottom = '20px';
+                
+                var label = document.createElement('label');
+                label.textContent = f.label;
+                label.style.display = 'block';
+                label.style.marginBottom = '8px';
+                label.style.fontWeight = 'bold';
+                fg.appendChild(label);
+                
+                var input = document.createElement(f.textarea ? 'textarea' : 'input');
+                input.id = 'content_' + f.id;
+                if (!f.textarea) input.type = 'text';
+                input.value = content[f.id] || f.default || '';
+                
+                if (f.textarea) {
+                    input.style.width = '100%'; 
+                    input.style.minHeight = '80px';
+                    input.style.padding = '8px';
+                    input.style.border = '1px solid var(--gray-300)';
+                    input.style.borderRadius = 'var(--radius-sm)';
+                } else {
+                    input.style.width = '100%';
+                    input.style.padding = '8px';
+                    input.style.border = '1px solid var(--gray-300)';
+                    input.style.borderRadius = 'var(--radius-sm)';
+                }
+                fg.appendChild(input);
+                
+                var btn = document.createElement('button');
+                btn.className = 'btn btn--secondary btn--sm';
+                btn.style.marginTop = '8px';
+                btn.textContent = 'Salvează text';
+                btn.onclick = async () => {
+                    var oTxt = btn.textContent;
+                    btn.textContent = '⏳...'; btn.disabled = true;
+                    await db.upsertSiteContent(f.id, input.value);
+                    btn.textContent = '✅ Salvat';
+                    setTimeout(() => { btn.textContent = oTxt; btn.disabled = false; }, 2000);
+                };
+                fg.appendChild(btn);
+                
+                grid.appendChild(fg);
+            });
         }
     </script>
 </body>

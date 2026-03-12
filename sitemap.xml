@@ -93,4 +93,22 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/contact.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/contact.html"/>
   </url>
+  <url>
+    <loc>https://www.pensiuneaalexandra.com/oferte.html</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/offers.html"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/oferte.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/offers.html"/>
+  </url>
+  <url>
+    <loc>https://www.pensiuneaalexandra.com/en/offers.html</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/oferte.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/offers.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/offers.html"/>
+  </url>
 </urlset>

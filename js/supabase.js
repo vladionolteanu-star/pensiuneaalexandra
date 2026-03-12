@@ -219,6 +219,85 @@ const db = {
         }
 
         return { success: true };
+    },
+
+    // ====== OFFERS ======
+
+    async getOffers() {
+        const { data, error } = await supabaseClient
+            .from('offers')
+            .select('*')
+            .eq('active', true)
+            .order('sort_order');
+        if (error) { console.error('getOffers error:', error); return []; }
+        return data;
+    },
+
+    async getAllOffers() {
+        const { data, error } = await supabaseClient
+            .from('offers')
+            .select('*')
+            .order('sort_order');
+        if (error) { console.error('getAllOffers error:', error); return []; }
+        return data;
+    },
+
+    async createOffer(offerData) {
+        const { data, error } = await supabaseClient
+            .from('offers')
+            .insert(offerData)
+            .select('*')
+            .single();
+        if (error) { console.error('createOffer error:', error); return { error }; }
+        return { data };
+    },
+
+    async updateOffer(id, offerData) {
+        const { data, error } = await supabaseClient
+            .from('offers')
+            .update(offerData)
+            .eq('id', id)
+            .select('*')
+            .single();
+        if (error) { console.error('updateOffer error:', error); return { error }; }
+        return { data };
+    },
+
+    async deleteOffer(id) {
+        const { error } = await supabaseClient
+            .from('offers')
+            .delete()
+            .eq('id', id);
+        if (error) { console.error('deleteOffer error:', error); return { error }; }
+        return { success: true };
+    },
+
+    // ====== SITE CONTENT ======
+
+    async getSiteContent() {
+        const { data, error } = await supabaseClient
+            .from('site_content')
+            .select('*');
+        if (error) { console.error('getSiteContent error:', error); return {}; }
+        const result = {};
+        (data || []).forEach(row => { result[row.id] = row.value; });
+        return result;
+    },
+
+    async upsertSiteContent(id, value) {
+        const { error } = await supabaseClient
+            .from('site_content')
+            .upsert({ id, value, updated_at: new Date().toISOString() });
+        if (error) { console.error('upsertSiteContent error:', error); return false; }
+        return true;
+    },
+
+    // ====== MIN PRICE ======
+
+    async getMinPrice() {
+        const rooms = await this.getRooms();
+        if (!rooms || rooms.length === 0) return 230;
+        return Math.min(...rooms.map(r => r.price));
     }
 };
 

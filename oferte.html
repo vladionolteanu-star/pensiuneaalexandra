@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferte Speciale Cazare Predeal — Pensiunea Alexandra</title>
+    <meta name="description"
+        content="Descoperă ofertele noastre speciale pentru cazare în Predeal la Pensiunea Alexandra. Pachete atractive pentru Paște, Crăciun, Revelion sau weekend-uri relaxante la munte.">
+    <link rel="canonical" href="https://www.pensiuneaalexandra.com/oferte.html">
+    <link rel="alternate" hreflang="ro" href="https://www.pensiuneaalexandra.com/oferte.html">
+    <link rel="alternate" hreflang="en" href="https://www.pensiuneaalexandra.com/en/offers.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.pensiuneaalexandra.com/en/offers.html">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🏔️</text></svg>">
+    <style>
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .offer-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--gray-200);
+        }
+
+        .offer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+            border-color: var(--gold);
+        }
+
+        .offer-card__image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 4px solid var(--gold);
+            transition: transform 0.6s ease;
+        }
+
+        .offer-card:hover .offer-card__image {
+            transform: scale(1.03);
+        }
+        
+        .offer-card__image-wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 280px;
+        }
+
+        .offer-card__content {
+            padding: var(--space-xl);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+        }
+
+        .offer-card__title {
+            font-size: 1.25rem;
+            color: var(--forest);
+            margin-bottom: var(--space-sm);
+        }
+
+        .offer-card__desc {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+            margin-bottom: var(--space-md);
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .offer-card__price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: var(--space-md);
+        }
+
+        /* Modal */
+        .offer-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+        }
+        .offer-modal.active { display: flex; }
+        .offer-modal__content {
+            background: var(--snow);
+            border-radius: var(--radius-xl);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .offer-modal__close {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: var(--snow);
+            color: var(--forest);
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .offer-modal__image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+        .offer-modal__body {
+            padding: var(--space-xl);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header__inner">
+            <a href="index.html" class="header__logo">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L3 18h6v12h14V18h6L16 2z" fill="#1a3c34" />
+                    <path d="M13 30V22h6v8" fill="#b8860b" />
+                </svg>
+                Pensiunea Alexandra
+            </a>
+            <nav class="header__nav">
+                <a href="index.html" class="header__link">Acasă</a>
+                <a href="camere.html" class="header__link">Camere</a>
+                <a href="galerie.html" class="header__link">Galerie</a>
+                <a href="oferte.html" class="header__link active">Oferte</a>
+                <a href="rezervare.html" class="header__link">Rezervare</a>
+                <a href="contact.html" class="header__link">Contact</a>
+            </nav>
+            <div class="header__actions">
+                <a href="en/offers.html" class="header__lang">EN</a>
+                <a href="rezervare.html" class="btn btn--primary btn--sm">Rezervă</a>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Acasă</a>
+        <a href="camere.html">Camere</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="oferte.html">Oferte</a>
+        <a href="rezervare.html">Rezervare</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <p class="section-label">Pachete & Experiențe</p>
+            <h1>Oferte Speciale</h1>
+            <p>Descoperă pachetele noastre pentru vacanțe memorabile. Rezervă direct pentru cele mai bune condiții.</p>
+        </div>
+    </div>
+
+    <!-- Offers Grid -->
+    <section class="section">
+        <div class="container" id="offersContainer">
+            <p style="text-align: center; color: var(--gray-500); padding: var(--space-2xl) 0;">Se încarcă ofertele...</p>
+        </div>
+    </section>
+
+    <!-- Modal Oferta -->
+    <div class="offer-modal" id="offerModal">
+        <div class="offer-modal__content">
+            <button class="offer-modal__close" onclick="closeOfferModal()">×</button>
+            <img src="" id="modalImg" class="offer-modal__image" alt="Oferta">
+            <div class="offer-modal__body">
+                <p class="section-label" style="margin-bottom: 8px;">Ofertă Specială</p>
+                <h2 id="modalTitle" style="margin-bottom: var(--space-md); color: var(--forest);"></h2>
+                <div id="modalPrice" class="offer-card__price" style="font-size: 1.3rem; margin-bottom: var(--space-lg);"></div>
+                
+                <div id="modalDesc" style="color: var(--gray-700); line-height: 1.6; margin-bottom: var(--space-2xl); white-space: pre-wrap;"></div>
+
+                <div style="background: var(--cream); padding: var(--space-lg); border-radius: var(--radius-sm); border-left: 4px solid var(--gold);">
+                    <h4 style="margin-bottom: var(--space-sm); color: var(--forest);">Sunteți interesat de această ofertă?</h4>
+                    <p style="color: var(--gray-500); font-size: 0.95rem; margin-bottom: var(--space-lg);">Pentru detalii complete și rezervări, vă rugăm să ne contactați direct pe WhatsApp.</p>
+                    <!-- Contact Form Inside Modal -->
+                    <div style="margin-top: var(--space-xl);">
+                        <form action="https://formsubmit.co/vladionolteanu@gmail.com" method="POST" id="offerContactForm">
+                            <!-- Anti-spam honeypot -->
+                            <input type="text" name="_honey" style="display:none">
+                            <!-- Disable captcha -->
+                            <input type="hidden" name="_captcha" value="false">
+                            <!-- Success page -->
+                            <input type="hidden" name="_next" id="offerFormsubmitNext" value="">
+                            <input type="hidden" name="_subject" id="offerFormSubject" value="Cerere informații ofertă - Pensiunea Alexandra">
+                            <input type="hidden" name="_template" value="box">
+                            <input type="hidden" name="Oferta_Selectata" id="offerFormName" value="">
+
+                            <div class="form-group">
+                                <label for="offerContactName">Numele tău *</label>
+                                <input type="text" id="offerContactName" name="Nume" required style="width: 100%; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); padding: var(--space-sm);">
+                            </div>
+                            <div class="form-group">
+                                <label for="offerContactEmail">Email-ul tău *</label>
+                                <input type="email" id="offerContactEmail" name="Email" required style="width: 100%; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); padding: var(--space-sm);">
+                            </div>
+                            <div class="form-group">
+                                <label for="offerContactMessage">Mesajul tău *</label>
+                                <textarea id="offerContactMessage" name="Mesaj" required rows="3" style="width: 100%; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); padding: var(--space-sm);"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn--primary" style="width: 100%;">Trimite Mesajul</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="section" style="background: var(--forest); color: var(--snow); text-align: center;">
+        <div class="container">
+            <h2 data-site-content="cta_title_ro" style="color: var(--snow); margin-bottom: var(--space-md);">Rezervă-ți vacanța la munte</h2>
+            <p data-site-content="cta_subtitle_ro"
+                style="opacity: 0.8; font-size: 1.1rem; margin-bottom: var(--space-xl); max-width: 500px; margin-left: auto; margin-right: auto;">
+                Prețuri de la <span class="dynamic-min-price">230</span> RON / noapte. Check-in de la ora 14:00. Confirmare rapidă pe WhatsApp.</p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="rezervare.html" class="btn btn--outline btn--lg">Verifică disponibilitate</a>
+                <a href="https://wa.me/40747679188?text=Bun%C4%83%20ziua!%20A%C8%99%20dori%20s%C4%83%20fac%20o%20rezervare%20la%20Pensiunea%20Alexandra."
+                    class="btn btn--whatsapp btn--lg" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Scrie pe WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <h3 class="footer__brand">Pensiunea Alexandra</h3>
+                    <p style="color: var(--gray-500); font-size: 0.95rem; margin-top: var(--space-sm);">Vă așteptăm cu
+                        drag pentru o vacanță relaxantă la poalele munților Bucegi.</p>
+                </div>
+                <div>
+                    <h4 class="footer__title">Linkuri</h4>
+                    <a href="camere.html" class="footer__link">Camere & Apartamente</a>
+                    <a href="galerie.html" class="footer__link">Galerie Foto</a>
+                    <a href="oferte.html" class="footer__link">Oferte Speciale</a>
+                    <a href="rezervare.html" class="footer__link">Verifică Disponibilitatea</a>
+                </div>
+                <div>
+                    <h4 class="footer__title">Contact</h4>
+                    <a href="tel:+40747679188" class="footer__link">📞 0747 679 188</a>
+                    <a href="https://wa.me/40747679188" class="footer__link" target="_blank">💬 WhatsApp</a>
+                </div>
+                <div>
+                    <h4 class="footer__title">Adresă</h4>
+                    <a href="contact.html" class="footer__link">📍 Str. Clujului nr. 8, Predeal<br>Județul Brașov, România</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        let allOffers = [];
+
+        async function loadOffers() {
+            if (typeof db === 'undefined') return;
+            const container = document.getElementById('offersContainer');
+            
+            try {
+                const offers = await db.getOffers();
+                allOffers = offers;
+
+                if (!offers || offers.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: var(--space-2xl); background: var(--cream); border-radius: var(--radius-lg);"><h3 style="color: var(--forest); margin-bottom: 8px;">Momentan nu avem oferte speciale active.</h3><p style="color: var(--gray-500);">Vă recamondăm să verificați disponibilitatea standard a camerelor noastre.</p><a href="rezervare.html" class="btn btn--primary" style="margin-top: var(--space-md); display: inline-block;">Vezi Camere</a></div>';
+                    return;
+                }
+
+                container.innerHTML = `<div class="offers-grid">
+                    ${offers.map((offer, index) => `
+                        <div class="offer-card" onclick="openOfferModal(${index})">
+                            <div class="offer-card__image-wrapper">
+                                <img src="${offer.image_url || 'images/hero/hero-2.jpg'}" alt="${offer.title_ro}" class="offer-card__image" loading="lazy">
+                            </div>
+                            <div class="offer-card__content">
+                                <h3 class="offer-card__title">${offer.title_ro}</h3>
+                                <div class="offer-card__price">${offer.price || ''}</div>
+                                <p class="offer-card__desc">${offer.description_ro}</p>
+                                <span style="color: var(--forest); font-weight: 600; font-size: 0.9rem; margin-top: auto; display: inline-flex; align-items: center; gap: 4px;">Vezi detalii <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } catch (err) {
+                console.error('Failed to load offers:', err);
+                container.innerHTML = '<p style="text-align: center; color: var(--danger);">Eroare la încărcarea ofertelor.</p>';
+            }
+        }
+
+        function openOfferModal(index) {
+            const offer = allOffers[index];
+            if (!offer) return;
+
+            document.getElementById('modalImg').src = offer.image_url || 'images/hero/hero-2.jpg';
+            document.getElementById('modalTitle').textContent = offer.title_ro;
+            document.getElementById('modalDesc').textContent = offer.description_ro;
+            document.getElementById('modalPrice').textContent = offer.price || '';
+            
+            // Configurare formular
+            document.getElementById('offerFormSubject').value = `Cerere informații ofertă: ${offer.title_ro}`;
+            document.getElementById('offerFormName').value = offer.title_ro;
+            document.getElementById('offerContactMessage').value = `Bună ziua,\n\nAș dori să aflu mai multe informații și disponibilitatea pentru oferta specială: ${offer.title_ro}.\n\nMulțumesc!`;
+            
+            // Set success page to the current page
+            document.getElementById('offerFormsubmitNext').value = window.location.href;
+
+            document.getElementById('offerModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOfferModal() {
+            document.getElementById('offerModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on click outside
+        document.getElementById('offerModal').addEventListener('click', (e) => {
+            if (e.target.id === 'offerModal') closeOfferModal();
+        });
+
+        document.addEventListener('DOMContentLoaded', loadOffers);
+    </script>
+</body>
+
+</html>
