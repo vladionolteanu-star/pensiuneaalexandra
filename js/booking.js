@@ -38,6 +38,26 @@ async function loadRoomPrices() {
             roomPrices[r.id] = r.price;
             roomNames[r.id] = r.name;
         });
+
+        // Update selector buttons with live prices
+        document.querySelectorAll('.room-selector__btn').forEach(btn => {
+            const id = btn.dataset.room;
+            if (id && roomPrices[id] && roomNames[id]) {
+                btn.textContent = `${roomNames[id]} — ${roomPrices[id]} RON`;
+            }
+        });
+
+        // Update select dropdown options with live prices
+        const select = document.getElementById('roomType');
+        if (select) {
+            select.querySelectorAll('option').forEach(opt => {
+                const id = opt.value;
+                if (id && roomPrices[id] && roomNames[id]) {
+                    opt.textContent = `${roomNames[id]} — ${roomPrices[id]} RON/noapte`;
+                }
+            });
+        }
+
         updatePriceEstimate();
     } catch (e) {
         console.log('Using fallback prices');
