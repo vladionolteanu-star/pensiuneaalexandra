@@ -215,7 +215,7 @@
                             </span>
                         </div>
                         <div class="room-card__footer">
-                            <div class="room-card__price">250 RON <span>/ noapte</span></div>
+                            <div class="room-card__price" data-room-id="dubla-clasic">250 RON <span>/ noapte</span></div>
                         </div>
                     </div>
                 </div>
@@ -258,7 +258,7 @@
                             </span>
                         </div>
                         <div class="room-card__footer">
-                            <div class="room-card__price">230 RON <span>/ noapte</span></div>
+                            <div class="room-card__price" data-room-id="twin">230 RON <span>/ noapte</span></div>
                         </div>
                     </div>
                 </div>
@@ -303,7 +303,7 @@
                             </span>
                         </div>
                         <div class="room-card__footer">
-                            <div class="room-card__price">350 RON <span>/ noapte</span></div>
+                            <div class="room-card__price" data-room-id="familie">350 RON <span>/ noapte</span></div>
                         </div>
                     </div>
                 </div>
@@ -321,7 +321,7 @@
                         <h3 class="room-card__name">Apartament Predeal</h3>
                         <p class="room-card__desc">Living, dormitor, bucătărie complet utilată</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">480 RON <span>/ noapte</span></div>
+                            <div class="room-card__price" data-room-id="apt-predeal">480 RON <span>/ noapte</span></div>
                         </div>
                     </div>
                 </div>
@@ -337,7 +337,7 @@
                         <h3 class="room-card__name">Apartament Panoramic</h3>
                         <p class="room-card__desc">Terasă privată, jacuzzi, vedere 360°</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">600 RON <span>/ noapte</span></div>
+                            <div class="room-card__price" data-room-id="apt-panoramic">600 RON <span>/ noapte</span></div>
                         </div>
                     </div>
                 </div>
@@ -509,6 +509,24 @@
         <div class="lightbox__counter" id="lightboxCounter"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        // Load live prices from Supabase
+        (async () => {
+            try {
+                const rooms = await db.getRooms();
+                rooms.forEach(room => {
+                    const el = document.querySelector(`[data-room-id="${room.id}"]`);
+                    if (el && room.price) {
+                        el.innerHTML = `${room.price} RON <span>/ noapte</span>`;
+                    }
+                });
+            } catch (e) {
+                console.warn('Could not load prices from Supabase:', e);
+            }
+        })();
+    </script>
     <script src="js/main.js"></script>
 </body>
 

@@ -179,7 +179,7 @@
                         <h3 class="room-card__name">Classic Double Room</h3>
                         <p class="room-card__desc">Matrimonial bed, balcony with garden view</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">250 RON <span>/ night</span></div>
+                            <div class="room-card__price" data-room-id="dubla-clasic">250 RON <span>/ night</span></div>
                         </div>
                     </div>
                 </div>
@@ -192,7 +192,7 @@
                         <h3 class="room-card__name">Twin Room</h3>
                         <p class="room-card__desc">Two separate beds, perfect for friends</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">230 RON <span>/ night</span></div>
+                            <div class="room-card__price" data-room-id="twin">230 RON <span>/ night</span></div>
                         </div>
                     </div>
                 </div>
@@ -206,7 +206,7 @@
                         <h3 class="room-card__name">Family Room</h3>
                         <p class="room-card__desc">Double bed + extra bed, 32 sqm</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">350 RON <span>/ night</span></div>
+                            <div class="room-card__price" data-room-id="familie">350 RON <span>/ night</span></div>
                         </div>
                     </div>
                 </div>
@@ -221,7 +221,7 @@
                         <h3 class="room-card__name">Predeal Apartment</h3>
                         <p class="room-card__desc">Living room, bedroom, fully equipped kitchen</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">480 RON <span>/ night</span></div>
+                            <div class="room-card__price" data-room-id="apt-predeal">480 RON <span>/ night</span></div>
                         </div>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                         <h3 class="room-card__name">Panoramic Apartment</h3>
                         <p class="room-card__desc">Private terrace, jacuzzi, 360° view</p>
                         <div class="room-card__footer">
-                            <div class="room-card__price">600 RON <span>/ night</span></div>
+                            <div class="room-card__price" data-room-id="apt-panoramic">600 RON <span>/ night</span></div>
                         </div>
                     </div>
                 </div>
@@ -399,6 +399,24 @@
         <div class="lightbox__counter" id="lightboxCounter"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        // Load live prices from Supabase
+        (async () => {
+            try {
+                const rooms = await db.getRooms();
+                rooms.forEach(room => {
+                    const el = document.querySelector(`[data-room-id="${room.id}"]`);
+                    if (el && room.price) {
+                        el.innerHTML = `${room.price} RON <span>/ night</span>`;
+                    }
+                });
+            } catch (e) {
+                console.warn('Could not load prices from Supabase:', e);
+            }
+        })();
+    </script>
     <script src="../js/main.js"></script>
 </body>
 
