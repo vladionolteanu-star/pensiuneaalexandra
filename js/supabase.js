@@ -11,6 +11,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 
 // Cache for rooms data (avoid repeated fetches on same page)
 let _roomsCache = null;
+const FALLBACK_MIN_PRICE = 230;
 
 const db = {
 
@@ -28,12 +29,16 @@ const db = {
     },
 
     async getRoomWithPhotos(roomId) {
-        const { data: room, error: roomErr } = await supabaseClient
-            .from('rooms')
-            .select('*')
-            .eq('id', roomId)
-            .single();
-        if (roomErr) { console.error('getRoomWithPhotos error:', roomErr); return null; }
+        let room = _roomsCache ? _roomsCache.find(r => r.id === roomId) : null;
+        if (!room) {
+            const { data, error: roomErr } = await supabaseClient
+                .from('rooms')
+                .select('*')
+                .eq('id', roomId)
+                .single();
+            if (roomErr) { console.error('getRoomWithPhotos error:', roomErr); return null; }
+            room = data;
+        }
 
         const { data: photos, error: photoErr } = await supabaseClient
             .from('room_photos')
@@ -296,7 +301,7 @@ const db = {
 
     async getMinPrice() {
         const rooms = await this.getRooms();
-        if (!rooms || rooms.length === 0) return 230;
+        if (!rooms || rooms.length === 0) return FALLBACK_MIN_PRICE;
         return Math.min(...rooms.map(r => r.price));
     }
 };

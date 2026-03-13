@@ -6,14 +6,17 @@
 
 const WHATSAPP_NUMBER = '40727333869';
 
-// Prices cache — loaded from Supabase or fallback
-let roomPrices = {
+// Fallback prices if Supabase request fails or is missing
+const FALLBACK_PRICES = {
     'dubla-clasic': 250,
     'twin': 230,
     'familie': 350,
     'apt-predeal': 480,
     'apt-panoramic': 600
 };
+
+// Prices cache — loaded from Supabase or fallback
+let roomPrices = { ...FALLBACK_PRICES };
 
 let roomNames = {
     'dubla-clasic': 'Camera Dublă Clasic',
@@ -289,11 +292,11 @@ async function sendEmail() {
             document.getElementById('bookingForm').reset();
             updatePriceEstimate();
         } else {
-            throw new Error('Netowrk response was not ok');
+            throw new Error('Network response was not ok');
         }
     } catch (error) {
         console.error('Email send failed:', error);
-        alert('Eroare la trimiterea emailului. Te rugăm să încerci pe WhatsApp s-au să ne suni direct.');
+        alert('Eroare la trimiterea emailului. Te rugăm să încerci pe WhatsApp sau să ne suni direct.');
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;

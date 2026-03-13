@@ -220,7 +220,8 @@ async function initDynamicContent() {
     document.querySelectorAll('[data-site-content]').forEach(el => {
       const key = el.getAttribute('data-site-content');
       if (siteContent[key]) {
-        el.innerHTML = siteContent[key];
+        // Use DOMPurify if available to prevent XSS, fallback to raw if not loaded
+        el.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(siteContent[key]) : siteContent[key];
       }
     });
 
